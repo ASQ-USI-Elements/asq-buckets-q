@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="asq-elements" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <title>Bucket questions</title>
+
+  <script src="../webcomponentsjs/webcomponents.js"></script>
+
+  <link href="../asq-exercise/asq-exercise.html" rel="import">
+  <link href="asq-buckets.html" rel="import">
+  
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <style shim-shadowdom>
+    body {
+      font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+      font-size: 14px;
+      margin: 0;
+      padding: 24px;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      -webkit-touch-callout: none;
+    }
+
+    asq-buckets /deep/ [target] {
+
+      padding: 4px;
+      margin-bottom: 20px;
+      line-height: 1.42857143;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      -webkit-transition: border .2s ease-in-out;
+           -o-transition: border .2s ease-in-out;
+              transition: border .2s ease-in-out;
+
+    }
+    div#targets {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    asq-buckets /deep/ wrapper{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    asq-buckets /deep/ [target] {
+      cursor: pointer;
+      display: block;
+      
+      min-height: 200px;
+      min-width: 150px;
+
+    }
+
+    asq-buckets /deep/ [target] > [object] {
+      cursor: default;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin: 2px;
+    }
+
+    asq-buckets /deep/ [target] > [object] > [change] {
+      background-color: #FF6666;
+    }
+
+    asq-buckets /deep/ [target] > span {
+      color: #E6E6E6;
+      background-color: #0080FF;
+      border-color: #bce8f1;
+      padding: 10px 5px;
+
+      border: 1px solid transparent;
+      border-radius: 4px;
+      display: block;
+      text-align: center;
+
+    }
+
+    asq-exercise > asq-buckets {
+      max-width: 400px;
+      text-align: center;
+      max-width: 50px auto;
+    }
+
+    asq-buckets /deep/ section {
+      text-align: center;
+    }
+
+    body > asq-exercise {
+      display: block;
+
+      width: 600px;
+    }
+
+    asq-buckets /deep/ [object] {
+      display: block;
+      color: #a94442;
+      background-color: #f2dede;
+      border-color: #ebccd1;
+      border-color: #faebcc;
+      padding: 8px 6px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+
+      max-width: 150px;
+      margin: 1px auto;
+    }
+
+    asq-buckets > [object] > b {
+      color: red;
+    }
+  </style>
+
+</head>
+<body>
+
+  <asq-exercise>
+    <asq-stem><h3>Ex 1-M</h3></asq-stem>
+    <asq-buckets targets="#targets" objects="#objects">
+      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
+      <div id="targets">
+        <div target name="Long"><span>Long</span></div>
+        <div target name="Short"><span>Short</span></div>
+        <div target name="Medium"><span>Medium</span></div>
+      </div>
+      <div id="objects">
+        <div object name="glas">Gl<b>a</b>s</div>
+        <div object name="nudeln">N<b>u</b>deln</div>
+        <div object name="platz">Pl<b>a</b>tz</div>
+        <div object name="vier">v<b>i</b>er</div>
+      </div>
+    </asq-buckets>
+  </asq-exercise>
+
+  <asq-exercise>
+    <asq-stem><h3>Ex 1-1</h3></asq-stem>
+    <asq-buckets mode='1-1'>
+      <asq-stem><h5>Match the correct translations.</h5></asq-stem>
+      <div target name="Sunny"><b>It is Sunny</b></div>
+      <div target name="Windy"><b>It is Windy</b></div>
+      <div target name="Rainy"><b>It is Rainy</b></div>
+
+      <div object name="sonnig">Es ist sonnig</div>
+      <div object name="windig">Es ist windig</div>
+      <div object name="regnet">Es ist regnet</div>
+    </asq-buckets>
+  </asq-exercise> 
+
+  <asq-exercise>
+    <asq-stem><h3>Another Ex 1-M</h3></asq-stem>
+    <asq-buckets>
+      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
+      <div target name="Long"><span>Long</span></div>
+      <div target name="Short"><span>Short</span></div>
+      <div target name="Medium"><span>Medium</span></div>
+      <div object name="glas">Gl<b>a</b>s</div>
+      <div object name="nudeln">N<b>u</b>deln</div>
+      <div object name="platz">Pl<b>a</b>tz</div>
+      <div object name="vier">v<b>i</b>er</div>
+    </asq-buckets>
+  </asq-exercise>
+
+  <!-- For tests -->
+  <div hidden>
+    <div object name="k1">kkkkk</div>
+    <div object name="f1">fffff</div>
+    <div target name="e1"><span>HI</span></div>
+    <div target name="e2"><span>NI</span></div>
+  </div>
+  <script>
+    var a = document.querySelector("asq-buckets")
+    var o = a.querySelector("#objects");
+    var t = a.querySelector("#targets");
+
+    var ll = document.querySelector("[name=Long]")
+    var gg = document.querySelector("[name=glas]")
+
+
+    var k = document.querySelector("[name=k1]")
+    var f = document.querySelector("[name=f1]")
+    var e1 = document.querySelector("[name=e1]")
+    var e2 = document.querySelector("[name=e2]")
+  </script>
+</body>
+</html>

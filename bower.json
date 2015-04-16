@@ -1,0 +1,20 @@
+{
+  "name": "asq-buckets",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ASQ-USI/asq-buckets",
+  "authors": [
+    "Vasileios Triglianos <triglian@gmail.com>",
+    "Zhenfei Nie <zhenfei.nie@gmail.com>"
+  ],
+  "description": "ASQ Buckets",
+  "keywords": [
+    "ASQ"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.0-rc1"
+  }
+}

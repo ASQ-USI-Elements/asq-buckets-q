@@ -1,0 +1,370 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../asq-base/asq-base.html">
+<link rel="import" href="../asq-match/asq-match.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<!--
+TODO ......
+
+##### Example
+    <asq-buckets >
+      <div targets>
+        <div target name="Long"><span>Long</span></div>
+        <div target name="Short"><span>Short</span></div>
+      </div>
+      <div objects>
+        <div object name="glas">Gl<b>a</b>s</div>
+        <div object name="nudeln">N<b>u</b>deln</div>
+        <div object name="platz">Pl<b>a</b>tz</div>
+        <div object name="vier">v<b>i</b>er</div>
+      </div>
+    </asq-buckets>
+
+
+@element asq-buckets
+@group ASQ Elements
+@blurb ...
+@homepage http://github.com/ASQ_USI/asq-buckets
+-->
+<polymer-element name="asq-buckets" attributes="mode targets objects">
+  <template>
+    <style>
+    section#show {
+      margin: 0px auto;
+      display: block;
+      text-align: center;
+    }
+    </style>
+    
+    <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
+    <content id="stem" select="asq-stem" ></content>
+    <wrapper><content id="items" select="*" ></content></wrapper>
+    <section id="show"></section>
+    
+  </template>
+
+  <script>
+  (function() {
+
+
+    var p = {
+
+      valueattr: 'name',
+
+      targets: null,
+
+      objects: null,
+
+      itemsSelector: '',
+
+      activateEvent: 'tap',
+
+      mode: '1-m',
+
+      interchangeable: true,
+
+
+      ready: function() {
+        this.activateListener = this.onTargetTap.bind(this);
+        this.targetObserver = new MutationObserver(this.updateTargets.bind(this));
+        this.objectsObserver = new MutationObserver(this.updateObjects.bind(this));
+
+        if (!this.targets) this.targets = this;
+        if (!this.objects) this.objects = this;
+      },
+
+      updateTargets: function() {
+        for (var x of this.getTargets()) {
+          this.removeListener(x);
+          this.addListener(x);
+        }
+      },
+
+      updateObjects: function() {
+        ! this.getCurrentObject() && this.showNextObject();
+      },
+
+      domReady: function() {
+        this.showNextObject();
+      },
+
+      targetsChanged: function(old) {
+        if (old && typeof old === "object") {
+          this.removeListener(old);
+          this.targetObserver.disconnect();
+        }
+        if (!this.targets) this.targets = this;
+        if ( typeof this.targets === "string" ) {
+          var targets = this.parentNode.querySelector(this.targets);
+          if ( targets ) this.targets = targets;
+          else this.targets = this;
+        } 
+        this.targetObserver.observe(this.targets, {childList: true});
+        for (var x of this.getTargets()) {
+          this.addListener(x);
+        }
+      },
+
+      objectsChanged: function(old) {
+        if (old && typeof old === "object") {
+          this.removeListener(old);
+          this.objectsObserver.disconnect();
+        }
+        if (!this.objects) this.objects = this;
+        if ( typeof this.objects === "string") {
+          var objects = this.parentNode.querySelector(this.objects);
+
+          if ( objects ) this.objects = objects;
+          else this.objects = this;
+        } 
+        this.objectsObserver.observe(this.objects, {childList: true});
+
+        // hide all object-s
+        if ( this.objects == this ) {
+          this.getUnmatchedObjects().forEach(function(element) {
+            element.setAttribute('hidden', true);
+          });
+        } else {
+          this.objects.setAttribute('hidden', true);
+        }
+      },
+
+      addListener: function(node) {
+        Polymer.addEventListener(node, this.activateEvent, this.activateListener);
+      },
+
+      removeListener: function(node) {
+        Polymer.removeEventListener(node, this.activateEvent, this.activateListener);
+      },
+
+      onSwitchTarget: function(event) {
+        this.switchTarget(event.target.parentNode);
+        event.stopPropagation();
+      },
+
+      switchTarget: function(object) {
+        var targets = this.getTargets();
+        var oldTarget = object.parentNode;
+        if (!oldTarget || !targets || targets.length <= 1) return;
+
+        var index = targets.indexOf(oldTarget);
+        index = index+1 == targets.length ? 0 : index+1;
+        var peerBucket = targets[index];
+
+        this.match(peerBucket, object);
+      },
+
+      onTargetTap: function(e) {
+        var target = e.currentTarget;
+        var object = this.getCurrentObject();
+        if ( !object ) return;          
+
+        // add a small label onto the object, which is used to move the object over 
+        // the targets
+        if ( this.$.match.modeState != this.$.match.modes.SINGLE ) this.addSwitchTag(object);
+        
+        Polymer.addEventListener(object, this.activateEvent, function(event) {
+          event.stopPropagation();
+        });
+        
+        this.match(target, object);
+        this.showNextObject();
+      },
+
+      addSwitchTag: function(object) {
+        var changeButton = document.createElement('i');
+        changeButton.setAttribute('change', true);
+        changeButton.textContent = '<>';
+        object.appendChild(changeButton);
+        Polymer.addEventListener(changeButton, this.activateEvent, this.onSwitchTarget.bind(this));
+      },
+
+      removeSwitchTag: function(object) {
+        object.childNodes.array().forEach(function(e) {
+          if ( e.nodeName == 'I' && e.hasAttribute('change')) {
+            Polymer.removeEventListener(e, this.activateEvent, this.onSwitchTarget.bind(this));
+            object.removeChild(e);
+          }
+        }, this);
+      },
+
+      getCurrentObject: function() {
+        var objects = this.$.show.childNodes.array().filter(function(e) {
+            return e.nodeType == 1 && e.hasAttribute('object');
+        });
+        if ( objects.length > 0 ) return objects[0];
+        else return null;
+      },
+
+      // 
+      showNextObject: function() {
+        var objects = this.getUnmatchedObjects();
+        if ( objects.length == 0 ) this.$.show.innerHtml = '';
+        else {
+          var object = objects.pop();
+          object.hidden = false;
+          this.$.show.appendChild(object);
+        }
+      },
+
+      onMatch: function(e) {
+        console.log('onMatch', e.detail.key, e.detail.value, e.detail.isMatch);
+        var target = this.findTargetByAttribute(e.detail.key);
+        var object = this.findObjecttByAttribute(e.detail.value);
+
+        if ( !target || !object ) {
+          return
+        }
+        if ( e.detail.isMatch ) {
+          target.appendChild(object);
+        } else {
+          if ( this.$.match.modeState == this.$.match.modes.SINGLE ) {
+            this.putBackObject(object);
+          }
+        }
+
+        this.prettyPrint();
+      },
+
+      putBackObject: function(object) {
+        if ( this.targets == this ) {
+          object.hidden = true;
+        }
+        this.removeSwitchTag(object);
+        this.objects.appendChild(object);
+      },
+
+
+      isMatch: function(k, v) {
+        return this.$.match.isMatch(k.getAttribute(this.valueattr), 
+          v.getAttribute(this.valueattr));
+      },
+
+      /**
+       * Set up a match between target and object
+       * @method match
+       * @param  {Object} k target
+       * @param  {Object} v object
+       */
+      match: function(target, object) {
+
+        k =  typeof target === 'object' ? 
+            target.getAttribute(this.valueattr) : target;
+        v = typeof object === 'object' ? 
+            object.getAttribute(this.valueattr) : object;
+        
+        this.$.match.match(k, v);
+        // k.appendChild(v);
+      },
+
+
+
+
+      findTargetByAttribute: function(attr) {
+
+        for ( var target of this.getTargets() ) {
+          if ( target.getAttribute(this.valueattr) == attr) {
+            return target;
+          }
+        }
+        return null;
+      },
+
+      findObjecttByAttribute: function(attr) {
+        var object = this.getCurrentObject();
+        if ( object && object.getAttribute(this.valueattr) == attr) {
+          return object;
+        }
+
+        for ( var object of this.getUnmatchedObjects() ) {
+          if ( object.getAttribute(this.valueattr) == attr) {
+            return object;
+          }
+        }
+
+        for ( var target of this.getTargets() ) {
+          for ( var object of this.getMatchedObjectsOfTarget(target) ) {
+            if ( object.getAttribute(this.valueattr) == attr) {
+              return object;
+            }
+          }
+        }
+        return null;
+      },
+
+      getMatchedObjectsOfTarget: function(target) {
+        var objects = [];
+        target.childNodes.array().forEach(function(e) {
+          e.hasAttribute('object') && objects.push(e);
+        });
+        return objects;
+      },
+
+      getTargets: function() {
+        var targets = [];
+        this.targets.childNodes.array().forEach(function(e) {
+          e.nodeType == 1 && e.hasAttribute('target') && targets.push(e);
+        });
+        return targets;
+      },
+
+      /**
+       * Get all unmatched objects.
+       * @method getUnmatchedObjects 
+       * @return {array} UnmatchedObjects
+       */
+      getUnmatchedObjects: function() {
+        var objects = [];
+        this.objects.childNodes.array().forEach(function(e) {
+            e.nodeType == 1 && e.hasAttribute('object') && objects.push(e);
+        });
+        return objects.reverse();
+
+      },
+
+      prettyPrint: function() {
+        var matches = this.$.match.getMatches();
+        console.log('- - - - match', matches.length, ' - - - -');
+        matches.forEach(function(m, index){
+          console.log('  ', index, ' : ' , m.key, m.value);
+        });
+        console.log('\n');
+      },
+
+      /**
+       * The `submit` method returns an object that respresents the submission of this question. The object has the following structure:
+
+           {
+              questionUid: this.uid, 
+              timestamp: new Date(),
+
+              // Array of the result of submit() called for each option of the question
+              submission: [] 
+           }
+       * Only enabled when the `role` of the element is <b>viewer</b>.
+       *
+       * @method submit
+       */
+      submit: function() {
+        if ( this.role !== this.roles.VIEWER ) {
+          return;
+        }
+
+        var submission = this.$.match.getMatches();
+
+        return {
+          questionUid: this.uid,
+          timestamp: new Date(),
+          submission: submission
+        };
+      }
+
+    }
+
+    ASQ.asqify(p, true);
+    Polymer('asq-buckets', p);
+
+  })();
+  </script>
+</polymer-element>
