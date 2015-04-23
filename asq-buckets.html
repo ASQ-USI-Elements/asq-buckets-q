@@ -5,15 +5,25 @@
 <link rel="import" href="../paper-button/paper-button.html">
 
 <!--
-TODO ......
+asq-buckets is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
+in the context) and some **_object_**<sub>s</sub>. Users can make matches between those **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>) and **_object_**<sub>s</sub>. The matches can be either `1-m` and `1-1` relation. It 
+can be specified by attribute *mode*.
+
+Under the hood, asq-buckets relies on asq-match element, which provides capability
+to store matches and fires mathcing/unmatching events.
+
+There are basicly two ways to use this element. The next examples shows the first 
+usage.
 
 ##### Example
-    <asq-buckets >
-      <div targets>
+    <asq-buckets targets="#targets" objects="#objects">
+      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
+      <div id="targets">
         <div target name="Long"><span>Long</span></div>
         <div target name="Short"><span>Short</span></div>
+        <div target name="Medium"><span>Medium</span></div>
       </div>
-      <div objects>
+      <div id="objects">
         <div object name="glas">Gl<b>a</b>s</div>
         <div object name="nudeln">N<b>u</b>deln</div>
         <div object name="platz">Pl<b>a</b>tz</div>
@@ -21,11 +31,38 @@ TODO ......
       </div>
     </asq-buckets>
 
+The second example is quite similar with the first one with the difference of 
+following:
+
+- it has no attributes *objects* and *targets* which denote which elements 
+contain all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
+- instead, it contains lots of children some of which has either attribute *target* or *object*. It basically means that the element, asq-buckets, itself
+contains all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
+
+
+##### Another Example
+    <asq-buckets>
+      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
+      <div target name="Long"><span>Long</span></div>
+      <div target name="Short"><span>Short</span></div>
+      <div target name="Medium"><span>Medium</span></div>
+      <div object name="glas">Gl<b>a</b>s</div>
+      <div object name="nudeln">N<b>u</b>deln</div>
+      <div object name="platz">Pl<b>a</b>tz</div>
+      <div object name="vier">v<b>i</b>er</div>
+    </asq-buckets>
+
+
+Note: objects is not the same as **_object_**<sub>s</sub>. The first is a name the 
+container elements and the second one means all the children elements with an 
+attribute *object* of the first one. The same situation with targets and **_target_**<sub>s</sub>.
+
+
 
 @element asq-buckets
 @group ASQ Elements
 @blurb ...
-@homepage http://github.com/ASQ_USI/asq-buckets
+@homepage http://github.com/ASQ-USI/asq-buckets
 -->
 <polymer-element name="asq-buckets" attributes="mode targets objects">
   <template>
@@ -50,20 +87,45 @@ TODO ......
 
     var p = {
 
+      /**
+       * Specifies the attribute to be used for "selected" attribute.
+       *
+       * @attribute valueattr
+       * @type string
+       * @default 'name'
+       */
       valueattr: 'name',
 
+      /**
+       * The element contains all the **_target_**<sub>s</sub>. If this is not set 
+       * `asq-order` is the container.
+       * @attribute targets
+       * @type string | object
+       */
       targets: null,
 
+      /**
+       * The element contains all the **_objects_**<sub>s</sub>. If this is not set 
+       * `asq-order` is the container.
+       *
+       *      objects="#objects"
+       *
+       * @attribute objects
+       * @type string | object
+       */
       objects: null,
 
-      itemsSelector: '',
-
+      /**
+       * The event that would be fired from the `object`s to indicate
+       * it is being selected.
+       *
+       * @attribute activateEvent
+       * @type string
+       * @default 'tap'
+       */
       activateEvent: 'tap',
 
       mode: '1-m',
-
-      interchangeable: true,
-
 
       ready: function() {
         this.activateListener = this.onTargetTap.bind(this);
@@ -74,6 +136,7 @@ TODO ......
         if (!this.objects) this.objects = this;
       },
 
+      // Observer function that handle the changes of dom in `target`. When changing the `targets`, the eventlistener should be removed and add new one.
       updateTargets: function() {
         for (var x of this.getTargets()) {
           this.removeListener(x);
@@ -81,6 +144,9 @@ TODO ......
         }
       },
 
+      // When the `objects` changed, it checks is there 
+      // object that is currently shown. If not, then just
+      // show one.
       updateObjects: function() {
         ! this.getCurrentObject() && this.showNextObject();
       },
@@ -143,6 +209,7 @@ TODO ......
         event.stopPropagation();
       },
 
+      // Move the `object` into another `target`.
       switchTarget: function(object) {
         var targets = this.getTargets();
         var oldTarget = object.parentNode;
@@ -155,6 +222,7 @@ TODO ......
         this.match(peerBucket, object);
       },
 
+      // Event handler for `tap` event on **_target_**<sub>s</sub>.
       onTargetTap: function(e) {
         var target = e.currentTarget;
         var object = this.getCurrentObject();
@@ -172,6 +240,8 @@ TODO ......
         this.showNextObject();
       },
 
+      // Add a small switch tag that is used to move the 
+      // object between **_target_**<sub>s</sub>
       addSwitchTag: function(object) {
         var changeButton = document.createElement('i');
         changeButton.setAttribute('change', true);
@@ -180,6 +250,7 @@ TODO ......
         Polymer.addEventListener(changeButton, this.activateEvent, this.onSwitchTarget.bind(this));
       },
 
+      // Remove such a tag describle in method `addSwitchTag`
       removeSwitchTag: function(object) {
         object.childNodes.array().forEach(function(e) {
           if ( e.nodeName == 'I' && e.hasAttribute('change')) {
@@ -189,6 +260,7 @@ TODO ......
         }, this);
       },
 
+      // Return the currently displayed `object`.
       getCurrentObject: function() {
         var objects = this.$.show.childNodes.array().filter(function(e) {
             return e.nodeType == 1 && e.hasAttribute('object');
@@ -197,7 +269,7 @@ TODO ......
         else return null;
       },
 
-      // 
+      // Show next available `object`.
       showNextObject: function() {
         var objects = this.getUnmatchedObjects();
         if ( objects.length == 0 ) this.$.show.innerHtml = '';
@@ -208,6 +280,9 @@ TODO ......
         }
       },
 
+      // Important event handler that listens for `asq-match` event.
+      // When received an event, it will either add an object into the target
+      // or move an object back to `objects`, i.e. make the object `unmatched`
       onMatch: function(e) {
         console.log('onMatch', e.detail.key, e.detail.value, e.detail.isMatch);
         var target = this.findTargetByAttribute(e.detail.key);
@@ -227,6 +302,7 @@ TODO ......
         this.prettyPrint();
       },
 
+      // Move the `object` back from a `target`.
       putBackObject: function(object) {
         if ( this.targets == this ) {
           object.hidden = true;
@@ -258,9 +334,7 @@ TODO ......
         // k.appendChild(v);
       },
 
-
-
-
+      // Find the target by given attribute.
       findTargetByAttribute: function(attr) {
 
         for ( var target of this.getTargets() ) {
@@ -271,6 +345,7 @@ TODO ......
         return null;
       },
 
+      // Find the object by the given attribute.
       findObjecttByAttribute: function(attr) {
         var object = this.getCurrentObject();
         if ( object && object.getAttribute(this.valueattr) == attr) {
@@ -293,6 +368,7 @@ TODO ......
         return null;
       },
 
+      // Return all the objects inside a target
       getMatchedObjectsOfTarget: function(target) {
         var objects = [];
         target.childNodes.array().forEach(function(e) {
@@ -301,6 +377,12 @@ TODO ......
         return objects;
       },
 
+      /**
+       * Get all available **_target_**<sub>s</sub>. NOTE, this method does not return 
+       * the attribute *targets*, but all children of element it.
+       * @method getTargets
+       * @return array an array of all available **_target_**<sub>s</sub>.
+       */
       getTargets: function() {
         var targets = [];
         this.targets.childNodes.array().forEach(function(e) {
@@ -323,6 +405,8 @@ TODO ......
 
       },
 
+      // Just for debug purpose. 
+      // Print out the matches.
       prettyPrint: function() {
         var matches = this.$.match.getMatches();
         console.log('- - - - match', matches.length, ' - - - -');
