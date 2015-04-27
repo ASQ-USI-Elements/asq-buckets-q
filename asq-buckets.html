@@ -87,6 +87,17 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
     var p = {
 
+      publish: {
+        /**
+         * Disable or endable the element. 
+         * 
+         * @attribute disabled
+         * @type boolean
+         * @default false
+         */
+        disabled: {value: false, reflect: true},
+      },
+
       /**
        * Specifies the attribute to be used for "selected" attribute.
        *
@@ -127,6 +138,27 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
       mode: '1-m',
 
+      disabledChanged: function() {
+        
+        if ( this.disabled ) {
+          for (var target of this.getTargets()) {
+            this.removeListener(target);
+
+            for ( var object of this.getMatchedObjectsOfTarget(target) ) {
+              this.removeSwitchTag(object);
+            }
+          }
+        } else {
+          for (var target of this.getTargets()) {
+            this.addListener(target);
+
+            for ( var object of this.getMatchedObjectsOfTarget(target) ) {
+              this.addSwitchTag(object);
+            }
+          }
+        }
+      },
+
       ready: function() {
         this.activateListener = this.onTargetTap.bind(this);
         this.targetObserver = new MutationObserver(this.updateTargets.bind(this));
@@ -138,10 +170,11 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
       // Observer function that handle the changes of dom in `target`. When changing the `targets`, the eventlistener should be removed and add new one.
       updateTargets: function() {
-        for (var x of this.getTargets()) {
-          this.removeListener(x);
-          this.addListener(x);
+        for (var target of this.getTargets()) {
+          this.removeListener(target);
+          this.addListener(target);
         }
+
       },
 
       // When the `objects` changed, it checks is there 
