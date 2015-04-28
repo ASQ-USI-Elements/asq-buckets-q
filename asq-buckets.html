@@ -3,6 +3,7 @@
 <link rel="import" href="../asq-base/asq-base.html">
 <link rel="import" href="../asq-match/asq-match.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../core-icons/core-icons.html">
 
 <!--
 asq-buckets is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
@@ -73,7 +74,6 @@ attribute *object* of the first one. The same situation with targets and **_targ
       text-align: center;
     }
     </style>
-    
     <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
     <content id="stem" select="asq-stem" ></content>
     <wrapper><content id="items" select="*" ></content></wrapper>
@@ -276,9 +276,9 @@ attribute *object* of the first one. The same situation with targets and **_targ
       // Add a small switch tag that is used to move the 
       // object between **_target_**<sub>s</sub>
       addSwitchTag: function(object) {
-        var changeButton = document.createElement('i');
-        changeButton.setAttribute('change', true);
-        changeButton.textContent = '<>';
+        var changeButton = document.createElement('core-icon');
+        // changeButton.setAttribute('change', true);
+        changeButton.setAttribute('icon', 'chevron-right');
         object.appendChild(changeButton);
         Polymer.addEventListener(changeButton, this.activateEvent, this.onSwitchTarget.bind(this));
       },
@@ -286,7 +286,8 @@ attribute *object* of the first one. The same situation with targets and **_targ
       // Remove such a tag describle in method `addSwitchTag`
       removeSwitchTag: function(object) {
         object.childNodes.array().forEach(function(e) {
-          if ( e.nodeName == 'I' && e.hasAttribute('change')) {
+          console.log(e.nodeName);
+          if ( e.nodeName == 'CORE-ICON' ) {
             Polymer.removeEventListener(e, this.activateEvent, this.onSwitchTarget.bind(this));
             object.removeChild(e);
           }
