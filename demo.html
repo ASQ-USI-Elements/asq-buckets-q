@@ -138,6 +138,31 @@
     asq-buckets core-icon:hover {
       fill: #fb8c00;
     }
+
+    asq-buckets[disabled] [target] > span {
+      background-color: #4C4C4C;
+    }
+
+    asq-buckets[disabled] [target] {
+      cursor: auto;
+      background-color: lightgray;
+    }
+    asq-buckets[disabled] [object] {
+      color: white;
+      background-color: #808080;
+    }
+
+    asq-buckets[disabled]::shadow [object] {
+      color: white;
+      background-color: #808080;
+    }
+    asq-buckets[disabled] [object] > b {
+      color: #333333;
+    }
+
+    asq-buckets[disabled]::shadow [object] > b {
+      color: #333333;
+    }
   </style>
 
 </head>
