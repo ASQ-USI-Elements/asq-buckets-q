@@ -25,7 +25,7 @@
       -webkit-touch-callout: none;
     }
 
-    asq-buckets /deep/ [target] {
+    asq-buckets [target] {
 
       padding: 4px;
       margin-bottom: 20px;
@@ -38,19 +38,13 @@
               transition: border .2s ease-in-out;
 
     }
-    div#targets {
+    asq-buckets #targets {
       display: flex;
       flex-direction: row;
       justify-content: center;
     }
 
-    asq-buckets /deep/ wrapper{
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
-
-    asq-buckets /deep/ [target] {
+    asq-buckets [target] {
       cursor: pointer;
       display: block;
       
@@ -59,7 +53,7 @@
 
     }
 
-    asq-buckets /deep/ [target] > [object] {
+    asq-buckets [target] [object] {
       cursor: default;
       display: flex;
       flex-direction: row;
@@ -67,11 +61,11 @@
       margin: 2px;
     }
 
-    asq-buckets /deep/ [target] > [object] > [change] {
+    asq-buckets [target] [change] {
       background-color: #FF6666;
     }
 
-    asq-buckets /deep/ [target] > span {
+    asq-buckets [target] > span {
       color: #E6E6E6;
       background-color: #0080FF;
       border-color: #bce8f1;
@@ -84,13 +78,13 @@
 
     }
 
-    asq-exercise > asq-buckets {
+    asq-buckets {
       max-width: 400px;
       text-align: center;
       max-width: 50px auto;
     }
 
-    asq-buckets /deep/ section {
+    asq-buckets > section {
       text-align: center;
     }
 
@@ -100,7 +94,7 @@
       width: 600px;
     }
 
-    asq-buckets /deep/ [object] {
+    asq-buckets [object] {
       display: block;
       color: #a94442;
       background-color: #f2dede;
@@ -114,18 +108,35 @@
       margin: 1px auto;
     }
 
-    asq-buckets > [object] > b {
+    asq-buckets::shadow [object] {
+      display: block;
+      color: #a94442;
+      background-color: #f2dede;
+      border-color: #ebccd1;
+      border-color: #faebcc;
+      padding: 8px 6px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+
+      max-width: 150px;
+      margin: 1px auto;
+    }
+
+    asq-buckets [object] > b {
       color: red;
     }
 
-    asq-exercise > asq-buckets /deep/ core-icon {
+    asq-buckets::shadow [object] > b {
+      color: red;
+    }
+
+    asq-buckets core-icon {
       transition: all 0.2s;
       -webkit-transition: all 0.2s;
     }
 
-    asq-exercise > asq-buckets /deep/ core-icon:hover {
+    asq-buckets core-icon:hover {
       fill: #fb8c00;
-      padding-right: 1em;
     }
   </style>
 
@@ -152,31 +163,21 @@
 
   <asq-exercise>
     <asq-stem><h3>Ex 1-1</h3></asq-stem>
-    <asq-buckets mode='1-1'>
+    <asq-buckets mode='1-1' targets="#targets" objects="#objects">
       <asq-stem><h5>Match the correct translations.</h5></asq-stem>
-      <div target name="Sunny"><b>It is Sunny</b></div>
-      <div target name="Windy"><b>It is Windy</b></div>
-      <div target name="Rainy"><b>It is Rainy</b></div>
-
-      <div object name="sonnig">Es ist sonnig</div>
-      <div object name="windig">Es ist windig</div>
-      <div object name="regnet">Es ist regnet</div>
+      <div id="targets">
+        <div target name="Sunny"><b>It is Sunny</b></div>
+        <div target name="Windy"><b>It is Windy</b></div>
+        <div target name="Rainy"><b>It is Rainy</b></div>
+      </div>
+      <div id="objects">
+        <div object name="sonnig">Es ist sonnig</div>
+        <div object name="windig">Es ist windig</div>
+        <div object name="regnet">Es ist regnet</div>
+      </div>
     </asq-buckets>
   </asq-exercise> 
 
-  <asq-exercise>
-    <asq-stem><h3>Another Ex 1-M</h3></asq-stem>
-    <asq-buckets>
-      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
-      <div target name="Long"><span>Long</span></div>
-      <div target name="Short"><span>Short</span></div>
-      <div target name="Medium"><span>Medium</span></div>
-      <div object name="glas">Gl<b>a</b>s</div>
-      <div object name="nudeln">N<b>u</b>deln</div>
-      <div object name="platz">Pl<b>a</b>tz</div>
-      <div object name="vier">v<b>i</b>er</div>
-    </asq-buckets>
-  </asq-exercise>
 
   <!-- For tests -->
   <div hidden>
