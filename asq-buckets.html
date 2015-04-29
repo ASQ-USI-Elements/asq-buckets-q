@@ -76,7 +76,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
     </style>
     <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
     <content id="stem" select="asq-stem" ></content>
-    <wrapper><content id="items" select="*" ></content></wrapper>
+    <content id="items" select="*" ></content>
     <section id="show"></section>
     
   </template>
@@ -343,6 +343,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
         }
         this.removeSwitchTag(object);
         this.objects.appendChild(object);
+
       },
 
 
@@ -404,11 +405,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
       // Return all the objects inside a target
       getMatchedObjectsOfTarget: function(target) {
-        var objects = [];
-        target.childNodes.array().forEach(function(e) {
-          e.hasAttribute('object') && objects.push(e);
-        });
-        return objects;
+        return target.querySelectorAll('[object]').array();
       },
 
       /**
@@ -418,11 +415,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
        * @return array an array of all available **_target_**<sub>s</sub>.
        */
       getTargets: function() {
-        var targets = [];
-        this.targets.childNodes.array().forEach(function(e) {
-          e.nodeType == 1 && e.hasAttribute('target') && targets.push(e);
-        });
-        return targets;
+        return this.targets.querySelectorAll('[target]').array();
       },
 
       /**
@@ -431,11 +424,8 @@ attribute *object* of the first one. The same situation with targets and **_targ
        * @return {array} UnmatchedObjects
        */
       getUnmatchedObjects: function() {
-        var objects = [];
-        this.objects.childNodes.array().forEach(function(e) {
-            e.nodeType == 1 && e.hasAttribute('object') && objects.push(e);
-        });
-        return objects.reverse();
+        var objects = this.objects.querySelectorAll('[object]');
+        return objects.array().reverse();
 
       },
 
