@@ -1,0 +1,21 @@
+{
+  "name": "asq-buckets",
+  "version": "0.0.0",
+  "description": "ASQ buckets question type element",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ASQ-USI/asq-buckets"
+  },
+  "dependencies": {
+    "asq-plugin": "ASQ-USI/asq-plugin",
+    "bluebird": "^2.9.7",
+    "cheerio": "^0.18.0",
+    "lodash": "^3.2.0",
+    "mongoose": "^3.8.23"
+  },
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "sinon": "^1.12.2"
+  }
+}

@@ -138,6 +138,59 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
       mode: '1-m',
 
+      created: function(){
+        document.addEventListener('asq-ready', function(evt){
+          try {
+            this.subscribeToEvents(evt.detail.asqEventBus)
+          } catch(err){
+            console.debug('failed to subscribeToEvents');
+          }
+        }.bind(this));
+      },
+
+      onQuestionType: function(evt){
+        if(!evt || ! evt.questionType) return;
+
+        if(evt.questionType == 'asq-buckets'){
+          if(evt.type == "restorePresenter"){
+            if(this.role !== this.roles.PRESENTER) return;
+            this.onRestorePresenter(evt);
+          }
+          else if(evt.type == "restoreViewer"){
+            if(this.role !== this.roles.VIEWER) return;
+            this.onRestoreViewer(evt);
+          }
+        }
+      },
+
+      onRestorePresenter: function(evt){
+
+      },
+
+      onRestoreViewer: function(evt){
+        evt.questions.forEach(function(q){
+          console.log(q)
+          if(q.uid != this.uid) return;
+          this.setMatches(q.matches);
+        }.bind(this));
+      },
+
+      subscribeToEvents: function(eventBus){
+        eventBus.on('asq:question_type', this.onQuestionType.bind(this));
+      },
+
+      setMatches: function(matches) {
+        if ( typeof matches === 'undefined' || !matches ) return;
+        matches.forEach(function(match, index){
+          var key = match.key;
+          var values = match.value;
+          for ( var value of values ) {
+            console.log(key, ' --> ', value);
+            this.match(key, value);
+          }
+        }, this);
+      },
+
       disabledChanged: function() {
         
         if ( this.disabled ) {
@@ -286,7 +339,6 @@ attribute *object* of the first one. The same situation with targets and **_targ
       // Remove such a tag describle in method `addSwitchTag`
       removeSwitchTag: function(object) {
         object.childNodes.array().forEach(function(e) {
-          console.log(e.nodeName);
           if ( e.nodeName == 'CORE-ICON' ) {
             Polymer.removeEventListener(e, this.activateEvent, this.onSwitchTarget.bind(this));
             object.removeChild(e);
