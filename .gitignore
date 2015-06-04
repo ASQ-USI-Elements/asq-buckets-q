@@ -26,6 +26,7 @@
 !/.bowerrc
 !/.gitignore
 !/.gitattributes
+!/.npmignore
 
 # Node.js #
 #################
