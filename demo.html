@@ -8,7 +8,7 @@
   <script src="../webcomponentsjs/webcomponents.js"></script>
 
   <link href="../asq-exercise/asq-exercise.html" rel="import">
-  <link href="asq-buckets.html" rel="import">
+  <link href="asq-buckets-q.html" rel="import">
   
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -25,7 +25,7 @@
       -webkit-touch-callout: none;
     }
 
-    asq-buckets [target] {
+    asq-buckets-q [target] {
 
       padding: 4px;
       margin-bottom: 20px;
@@ -38,13 +38,13 @@
               transition: border .2s ease-in-out;
 
     }
-    asq-buckets #targets {
+    asq-buckets-q #targets {
       display: flex;
       flex-direction: row;
       justify-content: center;
     }
 
-    asq-buckets [target] {
+    asq-buckets-q [target] {
       cursor: pointer;
       display: block;
       
@@ -53,7 +53,7 @@
 
     }
 
-    asq-buckets [target] [object] {
+    asq-buckets-q [target] [object] {
       cursor: default;
       display: flex;
       flex-direction: row;
@@ -61,11 +61,11 @@
       margin: 2px;
     }
 
-    asq-buckets [target] [change] {
+    asq-buckets-q [target] [change] {
       background-color: #FF6666;
     }
 
-    asq-buckets [target] > span {
+    asq-buckets-q [target] > span {
       color: #E6E6E6;
       background-color: #0080FF;
       border-color: #bce8f1;
@@ -78,13 +78,13 @@
 
     }
 
-    asq-buckets {
+    asq-buckets-q {
       max-width: 400px;
       text-align: center;
       max-width: 50px auto;
     }
 
-    asq-buckets > section {
+    asq-buckets-q > section {
       text-align: center;
     }
 
@@ -94,7 +94,7 @@
       width: 600px;
     }
 
-    asq-buckets [object] {
+    asq-buckets-q [object] {
       display: block;
       color: #a94442;
       background-color: #f2dede;
@@ -108,7 +108,7 @@
       margin: 1px auto;
     }
 
-    asq-buckets::shadow [object] {
+    asq-buckets-q::shadow [object] {
       display: block;
       color: #a94442;
       background-color: #f2dede;
@@ -122,45 +122,45 @@
       margin: 1px auto;
     }
 
-    asq-buckets [object] > b {
+    asq-buckets-q [object] > b {
       color: red;
     }
 
-    asq-buckets::shadow [object] > b {
+    asq-buckets-q::shadow [object] > b {
       color: red;
     }
 
-    asq-buckets core-icon {
+    asq-buckets-q core-icon {
       transition: all 0.2s;
       -webkit-transition: all 0.2s;
     }
 
-    asq-buckets core-icon:hover {
+    asq-buckets-q core-icon:hover {
       fill: #fb8c00;
     }
 
-    asq-buckets[disabled] [target] > span {
+    asq-buckets-q[disabled] [target] > span {
       background-color: #4C4C4C;
     }
 
-    asq-buckets[disabled] [target] {
+    asq-buckets-q[disabled] [target] {
       cursor: auto;
       background-color: lightgray;
     }
-    asq-buckets[disabled] [object] {
+    asq-buckets-q[disabled] [object] {
       color: white;
       background-color: #808080;
     }
 
-    asq-buckets[disabled]::shadow [object] {
+    asq-buckets-q[disabled]::shadow [object] {
       color: white;
       background-color: #808080;
     }
-    asq-buckets[disabled] [object] > b {
+    asq-buckets-q[disabled] [object] > b {
       color: #333333;
     }
 
-    asq-buckets[disabled]::shadow [object] > b {
+    asq-buckets-q[disabled]::shadow [object] > b {
       color: #333333;
     }
   </style>
@@ -169,7 +169,7 @@
 <body>
 
   <div>
-    <asq-buckets targets="#targets" objects="#objects">
+    <asq-buckets-q targets="#targets" objects="#objects">
       <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
       <div id="targets">
         <div target name="Long"><span>Long</span></div>
@@ -182,11 +182,11 @@
         <div object name="platz">Pl<b>a</b>tz</div>
         <div object name="vier">v<b>i</b>er</div>
       </div>
-    </asq-buckets>
+    </asq-buckets-q>
   </div>
 
   <div>
-    <asq-buckets mode='1-1' targets="#targets" objects="#objects">
+    <asq-buckets-q mode='1-1' targets="#targets" objects="#objects">
       <asq-stem><h5>Match the correct translations.</h5></asq-stem>
       <div id="targets">
         <div target name="Sunny"><b>It is Sunny</b></div>
@@ -198,7 +198,7 @@
         <div object name="windig">Es ist windig</div>
         <div object name="regnet">Es ist regnet</div>
       </div>
-    </asq-buckets>
+    </asq-buckets-q>
   </div>
 
 
@@ -210,7 +210,7 @@
     <div target name="e2"><span>NI</span></div>
   </div>
   <script>
-    var a = document.querySelector("asq-buckets")
+    var a = document.querySelector("asq-buckets-q")
     var o = a.querySelector("#objects");
     var t = a.querySelector("#targets");
 

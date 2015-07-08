@@ -6,18 +6,18 @@
 <link rel="import" href="../core-icons/core-icons.html">
 
 <!--
-asq-buckets is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
+asq-buckets-q is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
 in the context) and some **_object_**<sub>s</sub>. Users can make matches between those **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>) and **_object_**<sub>s</sub>. The matches can be either `1-m` and `1-1` relation. It 
 can be specified by attribute *mode*.
 
-Under the hood, asq-buckets relies on asq-match element, which provides capability
+Under the hood, asq-buckets-q relies on asq-match element, which provides capability
 to store matches and fires mathcing/unmatching events.
 
 There are basicly two ways to use this element. The next examples shows the first 
 usage.
 
 ##### Example
-    <asq-buckets targets="#targets" objects="#objects">
+    <asq-buckets-q targets="#targets" objects="#objects">
       <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
       <div id="targets">
         <div target name="Long"><span>Long</span></div>
@@ -30,19 +30,19 @@ usage.
         <div object name="platz">Pl<b>a</b>tz</div>
         <div object name="vier">v<b>i</b>er</div>
       </div>
-    </asq-buckets>
+    </asq-buckets-q>
 
 The second example is quite similar with the first one with the difference of 
 following:
 
 - it has no attributes *objects* and *targets* which denote which elements 
 contain all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
-- instead, it contains lots of children some of which has either attribute *target* or *object*. It basically means that the element, asq-buckets, itself
+- instead, it contains lots of children some of which has either attribute *target* or *object*. It basically means that the element, asq-buckets-q, itself
 contains all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
 
 
 ##### Another Example
-    <asq-buckets>
+    <asq-buckets-q>
       <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
       <div target name="Long"><span>Long</span></div>
       <div target name="Short"><span>Short</span></div>
@@ -51,7 +51,7 @@ contains all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target
       <div object name="nudeln">N<b>u</b>deln</div>
       <div object name="platz">Pl<b>a</b>tz</div>
       <div object name="vier">v<b>i</b>er</div>
-    </asq-buckets>
+    </asq-buckets-q>
 
 
 Note: objects is not the same as **_object_**<sub>s</sub>. The first is a name the 
@@ -60,12 +60,12 @@ attribute *object* of the first one. The same situation with targets and **_targ
 
 
 
-@element asq-buckets
+@element asq-buckets-q
 @group ASQ Elements
 @blurb ...
-@homepage http://github.com/ASQ-USI/asq-buckets
+@homepage http://github.com/ASQ-USI/asq-buckets-q
 -->
-<polymer-element name="asq-buckets" attributes="mode targets objects">
+<polymer-element name="asq-buckets-q" attributes="mode targets objects">
   <template>
     <style>
     section#show {
@@ -151,7 +151,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
       onQuestionType: function(evt){
         if(!evt || ! evt.questionType) return;
 
-        if(evt.questionType == 'asq-buckets'){
+        if(evt.questionType == 'asq-buckets-q'){
           if(evt.type == "restorePresenter"){
             if(this.role !== this.roles.PRESENTER) return;
             this.onRestorePresenter(evt);
@@ -523,7 +523,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
     }
 
     ASQ.asqify(p, true);
-    Polymer('asq-buckets', p);
+    Polymer('asq-buckets-q', p);
 
   })();
   </script>
