@@ -1,0 +1,34 @@
+<x-meta id="asq-buckets-q" label="Buckets" group="ASQ">
+
+  <property name="mode"
+    kind="select"
+    options="1-1, 1-m, m-1, m-m">
+  </property>
+
+  <property name="targets" kind="String"></property>
+  <property name="objects" kind="String"></property>
+
+  <template>
+    <div>
+      <asq-buckets-q targets="#targets" objects="#objects" style="max-width: 400px;text-align: center;max-width: 50px auto;">
+        <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
+        <div id="targets" style="display: flex;flex-direction: row;justify-content: center;">
+          <div target style="padding: 4px;margin-bottom: 20px;line-height: 1.42857143;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-transition: border .2s ease-in-out;-o-transition: border .2s ease-in-out;transition: border .2s ease-in-out;cursor: pointer;display: block;min-height: 200px;min-width: 150px;" name="Long"><span>Long</span></div>
+          <div target style="padding: 4px;margin-bottom: 20px;line-height: 1.42857143;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-transition: border .2s ease-in-out;-o-transition: border .2s ease-in-out;transition: border .2s ease-in-out;cursor: pointer;display: block;min-height: 200px;min-width: 150px;" name="Short"><span>Short</span></div>
+          <div target style="padding: 4px;margin-bottom: 20px;line-height: 1.42857143;background-color: #fff;border: 1px solid #ddd;border-radius: 4px;-webkit-transition: border .2s ease-in-out;-o-transition: border .2s ease-in-out;transition: border .2s ease-in-out;cursor: pointer;display: block;min-height: 200px;min-width: 150px;" name="Medium"><span>Medium</span></div>
+        </div>
+        <div id="objects">
+          <div object style="display: block;color: #a94442;background-color: #f2dede;border-color: #ebccd1;border-color: #faebcc;padding: 8px 6px;border: 1px solid transparent;border-radius: 4px;max-width: 150px;margin: 1px auto;" name="glas">Gl<b>a</b>s</div>
+          <div object style="display: block;color: #a94442;background-color: #f2dede;border-color: #ebccd1;border-color: #faebcc;padding: 8px 6px;border: 1px solid transparent;border-radius: 4px;max-width: 150px;margin: 1px auto;" name="nudeln">N<b>u</b>deln</div>
+          <div object style="display: block;color: #a94442;background-color: #f2dede;border-color: #ebccd1;border-color: #faebcc;padding: 8px 6px;border: 1px solid transparent;border-radius: 4px;max-width: 150px;margin: 1px auto;" name="platz">Pl<b>a</b>tz</div>
+          <div object style="display: block;color: #a94442;background-color: #f2dede;border-color: #ebccd1;border-color: #faebcc;padding: 8px 6px;border: 1px solid transparent;border-radius: 4px;max-width: 150px;margin: 1px auto;" name="vier">v<b>i</b>er</div>
+        </div>
+      </asq-buckets-q>
+    </div>
+  </template>
+
+  <template id="imports">
+    <link rel="import" href="asq-buckets-q.html">
+  </template>
+
+</x-meta>
