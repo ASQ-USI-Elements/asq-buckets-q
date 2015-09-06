@@ -183,6 +183,7 @@ attribute *object* of the first one. The same situation with targets and **_targ
           for ( var value of values ) {
             console.log(key, ' --> ', value);
             this.match(key, value);
+            this.showNextObject();
           }
         }, this);
       },
