@@ -4,6 +4,7 @@
 <link rel="import" href="../asq-match/asq-match.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <link rel="import" href="../google-chart/google-chart.html">
 
@@ -222,7 +223,8 @@ attribute *object* of the first one. The same situation with targets and **_targ
       },
 
       onRestorePresenter: function(evt){
-
+        console.log('onRestorePresenter', evt);
+        this.onProgress(evt);
       },
 
       onRestoreViewer: function(evt){
