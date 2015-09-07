@@ -386,7 +386,11 @@ attribute *object* of the first one. The same situation with targets and **_targ
       },
 
       doMatch: function(target, object) {
-        if ( this.$.match.modeState != this.$.match.modes.SINGLE ) this.addSwitchTag(object);
+        if ( this.$.match.modeState != this.$.match.modes.SINGLE ) {
+          if ( ! this.containsSwithTag(object) ) {
+            this.addSwitchTag(object);
+          }
+        }
         
         Polymer.addEventListener(object, this.activateEvent, function(event) {
           event.stopPropagation();
@@ -394,6 +398,13 @@ attribute *object* of the first one. The same situation with targets and **_targ
         
         this.match(target, object);
         this.showNextObject();
+      },
+
+      containsSwithTag: function(object) {
+        if ( object.querySelector('core-icon') ) {
+          return true;
+        }
+        return false;
       },
 
       // Add a small switch tag that is used to move the 
