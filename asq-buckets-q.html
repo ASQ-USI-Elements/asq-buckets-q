@@ -5,6 +5,8 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../core-icons/core-icons.html">
 
+<link rel="import" href="../google-chart/google-chart.html">
+
 <!--
 asq-buckets-q is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
 in the context) and some **_object_**<sub>s</sub>. Users can make matches between those **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>) and **_object_**<sub>s</sub>. The matches can be either `1-m` and `1-1` relation. It 
@@ -70,10 +72,29 @@ attribute *object* of the first one. The same situation with targets and **_targ
     <style>
 
     </style>
-    <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
-    <content id="stem" select="asq-stem" ></content>
-    <content id="items" select="*" ></content>
-    <section id="show"></section>
+    <template if="{{role==roles.VIEWER}}">
+      <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
+      <content id="stem" select="asq-stem" ></content>
+      <content id="items" select="*" ></content>
+      <section id="show"></section>
+    </template>
+
+
+    <template if="{{role==roles.PRESENTER}}">
+      <p>Waitting for submissions...</p>
+      <div horizontal center-justified layout>
+        <google-chart 
+          type="column" 
+          options='{"title": "Submissions",
+                "vAxis": {"minValue" : 0, "maxValue": 2},
+                "animation": {"duration": "1000"}}'
+          cols='[{"label": "Data", "type": "string"},{"label": "Value", "type": "number"}]' 
+          flex>
+        </google-chart>
+      </div>
+    </template>
+
+    
     
   </template>
 
@@ -182,6 +203,22 @@ attribute *object* of the first one. The same situation with targets and **_targ
             }
           });
         });
+
+        var data = [];
+        Object.keys(matchesDict).forEach(function(key, index){
+          data.push([key, matchesDict[key]]);
+        });
+
+        this.updateChart(data);
+      },
+
+      updateChart: function(data) {
+        var chart = this.getChart();
+        chart.rows = data;
+      },
+
+      getChart: function() {
+        return this.shadowRoot.querySelector('google-chart');
       },
 
       onRestorePresenter: function(evt){
