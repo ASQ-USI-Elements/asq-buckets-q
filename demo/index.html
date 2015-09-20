@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="asq-elements" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <title>asq-buckets-q | Demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+
+  <link href="../asq-buckets-q.html" rel="import">
+
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+
+  <link rel="import" href="../../paper-styles/paper-styles.html">
+  <link rel="import" href="../../paper-styles/demo-pages.html">
+
+  <style is="custom-style">
+
+    .vertical-section {
+      @apply(--layout-horizontal);
+      @apply(--layout-around-justified);
+      @apply(--layout-wrap);
+    }
+
+    div[buckets] {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+      @apply(--layout-wrap);
+    }
+
+    div[bucket] {
+      @apply(--layout-vertical);
+      min-width: 200px;
+      min-height: 200px;
+      
+      border: 1px solid grey;
+      margin: 1px;
+
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    div[bucket].over {
+      border: 1px dashed #000;
+      @apply(--shadow-elevation-3dp);
+    }
+
+    div[bucket] > b {
+      background-color: #75B7BE;
+      color: #E6E6E6;
+      border-color: #405356;
+      padding: 10px 5px;
+
+      border-radius: 4px;
+      display: block;
+      text-align: center;
+
+      @apply(--paper-font-title);
+
+    }
+
+
+
+    /*labels*/
+    div[labels] {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+      @apply(--layout-wrap);
+    }
+
+    div[label] {
+      padding: 6px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -ms-touch-action: manipulation;
+          touch-action: manipulation;
+      cursor: pointer;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+      background-image: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+
+      margin: 1px;
+    }
+
+    div[label].dragging {
+      opacity: 0.6;
+    }
+
+
+    [label].label-primary {
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #2e6da4;
+    }
+    [label].label-primary:focus,
+    [label].label-primary.focus {
+      color: #fff;
+      background-color: #286090;
+      border-color: #122b40;
+
+    }
+    [label].label-primary:hover {
+      color: #fff;
+      background-color: #286090;
+      border-color: #204d74;
+    }
+
+    [label].label-success {
+      color: #fff;
+      background-color: #5cb85c;
+      border-color: #4cae4c; 
+    }
+
+    [label].label-success:focus,
+    [label].label-success.focus {
+      color: #fff;
+      background-color: #449d44;
+      border-color: #255625;
+    }
+    [label].label-success:hover {
+      color: #fff;
+      background-color: #449d44;
+      border-color: #398439;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <div class="vertical-section-container">
+    <div class="vertical-section">
+      <asq-buckets-q id="m" 
+        mode="1-2" 
+        x-matchable="div[bucket]" 
+        y-matchable="div[label]" 
+        attr-for-matched="s-name"
+        matched-attribute="matched"
+        label-container="[labels]"
+        matched-class="label-success">
+
+        <div buckets>
+          <div s-name="china" bucket><b>china</b></div>
+          <div s-name="france" bucket><b>france</b></div>
+          <div s-name="kroea" bucket><b>kroea</b></div>
+        </div>
+        
+        <div labels>
+          <div s-name="sun" label class="label-primary">sun</div>
+          <div s-name="moon" label class="label-primary">moon</div>
+          <div s-name="sky" label class="label-primary">sky</div>
+          <div s-name="mar" label class="label-primary">mar</div>
+          <div s-name="info" label class="label-primary">info</div>
+          <div s-name="2000" label class="label-primary">2000</div>
+        </div>
+      </asq-buckets-q>
+    </div>
+  </div>
+
+
+
+  <script>
+
+
+    m.addEventListener('asq-matched', function(e) {
+      prettyPrint();
+    }, true);
+
+    prettyPrint = function() {
+      Object.keys(m._match.x).forEach(function(x, index){
+        console.log(x, ' -> ', m._match.x[x]);
+      });
+      console.log('');
+    }
+
+    
+  </script>
+
+
+
+
+</body>
+</html>

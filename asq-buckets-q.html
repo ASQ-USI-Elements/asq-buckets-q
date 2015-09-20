@@ -1,619 +1,252 @@
 <link rel="import" href="../polymer/polymer.html">
-
 <link rel="import" href="../asq-base/asq-base.html">
-<link rel="import" href="../asq-match/asq-match.html">
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../core-icons/core-icons.html">
-<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../asq-match/asq-matchable.html">
 
-<link rel="import" href="../google-chart/google-chart.html">
 
 <!--
-asq-buckets-q is a question type that defines some **_bucket_**<sub>s</sub>(also called **_target_**<sub>s</sub>
-in the context) and some **_object_**<sub>s</sub>. Users can make matches between those **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>) and **_object_**<sub>s</sub>. The matches can be either `1-m` and `1-1` relation. It 
-can be specified by attribute *mode*.
+`asq-buckets-q` is a kind of matching question. To use this question, you need to difine two sets, `X` set and `Y` set, using `x-matchable` and `y-matchable`.
 
-Under the hood, asq-buckets-q relies on asq-match element, which provides capability
-to store matches and fires mathcing/unmatching events.
+Users can make matches between `X` and `Y` set. The matches can be either `1-m` and `1-1` relation, by specifing `mode` attribute.
 
-There are basicly two ways to use this element. The next examples shows the first 
-usage.
 
-##### Example
-    <asq-buckets-q targets="#targets" objects="#objects">
-      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
-      <div id="targets">
-        <div target name="Long"><span>Long</span></div>
-        <div target name="Short"><span>Short</span></div>
-        <div target name="Medium"><span>Medium</span></div>
+Examples:
+    
+    <asq-buckets-q 
+      mode="1-2" 
+      x-matchable="div[bucket]" 
+      y-matchable="div[label]" 
+      attr-for-matched="s-name"
+      matched-attribute="matched"
+      label-container="[labels]"
+      matched-class="label-success">
+
+      <div buckets>
+        <div s-name="china" bucket><b>china</b></div>
+        <div s-name="france" bucket><b>france</b></div>
+        <div s-name="kroea" bucket><b>kroea</b></div>
       </div>
-      <div id="objects">
-        <div object name="glas">Gl<b>a</b>s</div>
-        <div object name="nudeln">N<b>u</b>deln</div>
-        <div object name="platz">Pl<b>a</b>tz</div>
-        <div object name="vier">v<b>i</b>er</div>
+      
+      <div labels>
+        <div s-name="sun" label class="label-primary">sun</div>
+        <div s-name="moon" label class="label-primary">moon</div>
+        <div s-name="sky" label class="label-primary">sky</div>
+        <div s-name="mar" label class="label-primary">mar</div>
+        <div s-name="info" label class="label-primary">info</div>
+        <div s-name="2000" label class="label-primary">2000</div>
       </div>
     </asq-buckets-q>
 
-The second example is quite similar with the first one with the difference of 
-following:
-
-- it has no attributes *objects* and *targets* which denote which elements 
-contain all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
-- instead, it contains lots of children some of which has either attribute *target* or *object*. It basically means that the element, asq-buckets-q, itself
-contains all the **_object_**<sub>s</sub> and **_bucket_**<sub>s</sub>(**_target_**<sub>s</sub>)
 
 
-##### Another Example
-    <asq-buckets-q>
-      <asq-stem><h5>Please classify the words according to the pronunciation of the bolded vowels</h5></asq-stem>
-      <div target name="Long"><span>Long</span></div>
-      <div target name="Short"><span>Short</span></div>
-      <div target name="Medium"><span>Medium</span></div>
-      <div object name="glas">Gl<b>a</b>s</div>
-      <div object name="nudeln">N<b>u</b>deln</div>
-      <div object name="platz">Pl<b>a</b>tz</div>
-      <div object name="vier">v<b>i</b>er</div>
-    </asq-buckets-q>
-
-
-Note: objects is not the same as **_object_**<sub>s</sub>. The first is a name the 
-container elements and the second one means all the children elements with an 
-attribute *object* of the first one. The same situation with targets and **_target_**<sub>s</sub>.
-
-
-
-@element asq-buckets-q
+@element asq-asq-buckets-q
+@demo demo/index.html
 @group ASQ Elements
-@blurb ...
+@blurb ASQ buckets questions.
 @homepage http://github.com/ASQ-USI-Elements/asq-buckets-q
 -->
-<polymer-element name="asq-buckets-q" attributes="mode targets objects">
+<dom-module id="asq-buckets-q">
+  
+  <style is="custom-style">
+    :host {
+      display: block;
+    }
+  </style>
+
   <template>
-    <style>
-
-    </style>
-    <template if="{{role==roles.VIEWER}}">
-      <asq-match id="match" mode="{{mode}}" on-asq-match="{{onMatch}}"></asq-match>
-      <content id="stem" select="asq-stem" ></content>
-      <content id="items" select="*" ></content>
-      <section id="show"></section>
+    <template is="dom-if" if="{{hasRole(role, roles.VIEWER)}}" restamp>
+      <content select="*"></content>
     </template>
 
-
-    <template if="{{role==roles.PRESENTER}}">
-      <p>Waitting for submissions...</p>
-      <div horizontal center-justified layout>
-        <google-chart 
-          type="column" 
-          options='{"title": "Submissions",
-                "vAxis": {"minValue" : 0, "maxValue": 2},
-                "animation": {"duration": "1000"}}'
-          cols='[{"label": "Data", "type": "string"},{"label": "Value", "type": "number"}]' 
-          flex>
-        </google-chart>
-      </div>
+    <template is="dom-if" if="{{hasRole(role, roles.PRESENTER)}}" restamp>
+      <p>presenter viewer</p>
     </template>
-
-    
     
   </template>
 
   <script>
-  (function() {
+    Polymer({
+      is: 'asq-buckets-q',
 
+      behaviors: [
+        ASQ.asqElementBehavior,
+        ASQ.MatchableBehavior
+      ],
 
-    var p = {
-
-      publish: {
-        /**
-         * Disable or endable the element. 
-         * 
-         * @attribute disabled
-         * @type boolean
-         * @default false
-         */
-        disabled: {value: false, reflect: true},
+      created: function() {
+        this.listen(this, 'asq-matched', '_onMatched');
       },
 
-      /**
-       * Specifies the attribute to be used for "selected" attribute.
-       *
-       * @attribute valueattr
-       * @type string
-       * @default 'name'
-       */
-      valueattr: 'name',
-
-      /**
-       * The element contains all the **_target_**<sub>s</sub>. If this is not set 
-       * `asq-order` is the container.
-       * @attribute targets
-       * @type string | object
-       */
-      targets: null,
-
-      /**
-       * The element contains all the **_objects_**<sub>s</sub>. If this is not set 
-       * `asq-order` is the container.
-       *
-       *      objects="#objects"
-       *
-       * @attribute objects
-       * @type string | object
-       */
-      objects: null,
-
-      /**
-       * The event that would be fired from the `object`s to indicate
-       * it is being selected.
-       *
-       * @attribute activateEvent
-       * @type string
-       * @default 'tap'
-       */
-      activateEvent: 'tap',
-
-      mode: '1-m',
-
-      created: function(){
-        document.addEventListener('asq-ready', function(evt){
-          try {
-            this.subscribeToEvents(evt.detail.asqEventBus)
-          } catch(err){
-            console.debug('failed to subscribeToEvents');
-          }
-        }.bind(this));
+      attached: function() {
+        this.async(function() {
+          this._initItems();
+        })
       },
 
-      onQuestionType: function(evt){
-        if(!evt || ! evt.questionType) return;
+      _labelContainer: undefined,
 
-        if(evt.questionType == 'asq-buckets-q'){
-          if(evt.type == "restorePresenter"){
-            if(this.role !== this.roles.PRESENTER) return;
-            this.onRestorePresenter(evt);
-          }
-          else if(evt.type == "restoreViewer"){
-            if(this.role !== this.roles.VIEWER) return;
-            this.onRestoreViewer(evt);
-          } 
-          else if(evt.type == "progress"){
-            if(this.role !== this.roles.PRESENTER) return;
-            if(evt.uid != this.uid) return;
-            this.onProgress(evt);
-          } 
+
+      properties: {
+        onDraggingClass: {
+          type: String,
+          value: 'dragging',
+          notify: true
+        },
+
+        labelContainer: {
+          type: String,
+          value: '',
+          observer: '_labelContainerChanged'
         }
       },
 
-      onProgress: function(evt) {
-        var matches = evt.answers[0].matches;
-
-        matchesDict = {};
-
-        matches.forEach(function(match, index){
-          var key = match.key;
-          var values = match.value;
-
-          values.forEach(function(value, index){
-            var newKey = key+ '-'+value;
-            if ( matchesDict.hasOwnProperty(newKey) ) {
-              matchesDict[newKey] = matchesDict[newKey] + 1;
-            } else {
-              matchesDict[newKey] = 1;
-            }
-          });
-        });
-
-        var data = [];
-        Object.keys(matchesDict).forEach(function(key, index){
-          data.push([key, matchesDict[key]]);
-        });
-
-        this.updateChart(data);
+      hasRole: function (role, candidate) {
+        return role == candidate;
       },
 
-      updateChart: function(data) {
-        var chart = this.getChart();
-        chart.rows = data;
+      _labelContainerChanged: function() {
+        var container = Polymer.dom(this).querySelector(this.labelContainer);
+
+        this._labelContainer = container ? container : this;
       },
 
-      getChart: function() {
-        return this.shadowRoot.querySelector('google-chart');
-      },
+      _initItems: function() {
 
-      onRestorePresenter: function(evt){
-        console.log('onRestorePresenter', evt);
-        this.onProgress(evt);
-      },
-
-      onRestoreViewer: function(evt){
-        evt.questions.forEach(function(q){
-          console.log(q)
-          if(q.uid != this.uid) return;
-
-
-          this.setMatches(q.matches);
-        }.bind(this));
-      },
-
-      subscribeToEvents: function(eventBus){
-        eventBus.on('asq:question_type', this.onQuestionType.bind(this));
-      },
-
-      setMatches: function(matches) {
-        if ( typeof matches === 'undefined' || !matches ) return;
-        matches.forEach(function(match, index){
-          var key = match.key;
-          var values = match.value;
-          for ( var value of values ) {
-            console.log(key, ' --> ', value);
-            // this.match(key, value);
-            // this.showNextObject();
-            var target = this.findTargetByAttribute(key);
-            var object = this.findObjecttByAttribute(value);
-            this.doMatch(target, object);
-          }
+        this.xItems.forEach(function(x) {
+          x.addEventListener('dragenter', this._onDragEnter);
+          x.addEventListener('dragleave', this._onDragLeave);
+          x.addEventListener('dragover', this._onDragOver);
+          x.addEventListener('drop', this._onDrop.bind(this));
         }, this);
-      },
 
-      disabledChanged: function() {
-        
-        if ( this.disabled ) {
-          for (var target of this.getTargets()) {
-            this.removeListener(target);
+        this.yItems.forEach(function(y) {
+          y.setAttribute('draggable', true);
 
-            for ( var object of this.getMatchedObjectsOfTarget(target) ) {
-              this.removeSwitchTag(object);
-            }
-          }
-        } else {
-          for (var target of this.getTargets()) {
-            this.addListener(target);
-
-            for ( var object of this.getMatchedObjectsOfTarget(target) ) {
-              this.addSwitchTag(object);
-            }
-          }
-        }
-      },
-
-      ready: function() {
-        this.activateListener = this.onTargetTap.bind(this);
-        this.targetObserver = new MutationObserver(this.updateTargets.bind(this));
-        this.objectsObserver = new MutationObserver(this.updateObjects.bind(this));
-
-        if (!this.targets) this.targets = this;
-        if (!this.objects) this.objects = this;
-      },
-
-      // Observer function that handle the changes of dom in `target`. When changing the `targets`, the eventlistener should be removed and add new one.
-      updateTargets: function() {
-        for (var target of this.getTargets()) {
-          this.removeListener(target);
-          this.addListener(target);
-        }
-
-      },
-
-      // When the `objects` changed, it checks is there 
-      // object that is currently shown. If not, then just
-      // show one.
-      updateObjects: function() {
-        ! this.getCurrentObject() && this.showNextObject();
-      },
-
-      domReady: function() {
-        this.showNextObject();
-      },
-
-      targetsChanged: function(old) {
-        if (old && typeof old === "object") {
-          this.removeListener(old);
-          this.targetObserver.disconnect();
-        }
-        if (!this.targets) this.targets = this;
-        if ( typeof this.targets === "string" ) {
-          var targets = this.parentNode.querySelector(this.targets);
-          if ( targets ) this.targets = targets;
-          else this.targets = this;
-        } 
-        this.targetObserver.observe(this.targets, {childList: true});
-        for (var x of this.getTargets()) {
-          this.addListener(x);
-        }
-      },
-
-      objectsChanged: function(old) {
-        if (old && typeof old === "object") {
-          this.removeListener(old);
-          this.objectsObserver.disconnect();
-        }
-        if (!this.objects) this.objects = this;
-        if ( typeof this.objects === "string") {
-          var objects = this.parentNode.querySelector(this.objects);
-
-          if ( objects ) this.objects = objects;
-          else this.objects = this;
-        } 
-        this.objectsObserver.observe(this.objects, {childList: true});
-
-        // hide all object-s
-        if ( this.objects == this ) {
-          this.getUnmatchedObjects().forEach(function(element) {
-            element.setAttribute('hidden', true);
-          });
-        } else {
-          this.objects.setAttribute('hidden', true);
-        }
-      },
-
-      addListener: function(node) {
-        Polymer.addEventListener(node, this.activateEvent, this.activateListener);
-      },
-
-      removeListener: function(node) {
-        Polymer.removeEventListener(node, this.activateEvent, this.activateListener);
-      },
-
-      onSwitchTarget: function(event) {
-        this.switchTarget(event.target.parentNode);
-        event.stopPropagation();
-      },
-
-      // Move the `object` into another `target`.
-      switchTarget: function(object) {
-        var targets = this.getTargets();
-        var oldTarget = object.parentNode;
-        if (!oldTarget || !targets || targets.length <= 1) return;
-
-        var index = targets.indexOf(oldTarget);
-        index = index+1 == targets.length ? 0 : index+1;
-        var peerBucket = targets[index];
-
-        this.match(peerBucket, object);
-      },
-
-      // Event handler for `tap` event on **_target_**<sub>s</sub>.
-      onTargetTap: function(e) {
-        var target = e.currentTarget;
-        var object = this.getCurrentObject();
-        if ( !object ) return;          
-
-        // add a small label onto the object, which is used to move the object over 
-        // the targets
-        this.doMatch(target, object);
-      },
-
-      doMatch: function(target, object) {
-        if ( this.$.match.modeState != this.$.match.modes.SINGLE ) {
-          if ( ! this.containsSwithTag(object) ) {
-            this.addSwitchTag(object);
-          }
-        }
-        
-        Polymer.addEventListener(object, this.activateEvent, function(event) {
-          event.stopPropagation();
-        });
-        
-        this.match(target, object);
-        this.showNextObject();
-      },
-
-      containsSwithTag: function(object) {
-        if ( object.querySelector('core-icon') ) {
-          return true;
-        }
-        return false;
-      },
-
-      // Add a small switch tag that is used to move the 
-      // object between **_target_**<sub>s</sub>
-      addSwitchTag: function(object) {
-        if ( typeof object == 'string' ) {
-          object = this.findObjecttByAttribute(object);
-        }
-        var changeButton = document.createElement('core-icon');
-        // changeButton.setAttribute('change', true);
-        changeButton.setAttribute('icon', 'chevron-right');
-        object.appendChild(changeButton);
-        Polymer.addEventListener(changeButton, this.activateEvent, this.onSwitchTarget.bind(this));
-      },
-
-      // Remove such a tag describle in method `addSwitchTag`
-      removeSwitchTag: function(object) {
-        object.childNodes.array().forEach(function(e) {
-          if ( e.nodeName == 'CORE-ICON' ) {
-            Polymer.removeEventListener(e, this.activateEvent, this.onSwitchTarget.bind(this));
-            object.removeChild(e);
-          }
+          y.addEventListener('dragstart', this._onDragStart.bind(this));
+          y.addEventListener('dragend', this._onDragEnd.bind(this));
+          
         }, this);
-      },
 
-      // Return the currently displayed `object`.
-      getCurrentObject: function() {
-        var objects = this.$.show.childNodes.array().filter(function(e) {
-            return e.nodeType == 1 && e.hasAttribute('object');
+
+        // 
+        document.body.addEventListener('drop', this._onDropOut.bind(this));
+
+        document.body.addEventListener('dragenter', function(e) {
+          if (e.preventDefault) e.preventDefault(); 
         });
-        if ( objects.length > 0 ) return objects[0];
-        else return null;
+
+        document.body.addEventListener('dragover', function(e) {
+          if (e.preventDefault) e.preventDefault(); 
+          return false
+        });
       },
 
-      // Show next available `object`.
-      showNextObject: function() {
-        if ( this.getCurrentObject() ) {
+      _onDragStart: function(e) {
+        if ( this.onDraggingClass ) 
+          e.currentTarget.classList.toggle(this.onDraggingClass, true);
+
+        var data = this._valueForItem(e.currentTarget);
+
+        // store the current bucket
+        var parentElement = e.target.parentElement;
+        if ( this.xItems.indexOf(parentElement) >= 0 ) {
+          data = data + ';' + this._valueForItem(parentElement);
+        }
+        e.dataTransfer.dropEffect = 'move';
+        e.dataTransfer.setData('Text', data);
+      },
+
+      _onDragEnd: function(e) {
+        if (e.preventDefault) e.preventDefault();
+        if ( this.onDraggingClass ) 
+          e.currentTarget.classList.toggle(this.onDraggingClass, false);
+      },
+
+      _onDragEnter: function(e) {
+        if (e.preventDefault) {
+          e.preventDefault(); 
+        }
+        e.currentTarget.classList.toggle('over', true);
+      },
+
+      _onDragOver: function(e) {
+        e.preventDefault();
+        return false
+      },
+
+      _onDragLeave: function(e) {
+        e.currentTarget.classList.toggle('over', false);
+      },
+
+      _onDrop: function(e) {
+        if (e.stopPropagation) 
+          e.stopPropagation();
+
+        if (e.preventDefault) 
+          e.preventDefault(); 
+
+        e.currentTarget.classList.toggle('over', false);
+        
+        var x = this._valueForItem(e.currentTarget);
+        var y = e.dataTransfer.getData('Text').split(';')[0];
+
+        if ( this.isMatched(x, y) ) {
+          // do nothing
           return
         }
-        var objects = this.getUnmatchedObjects();
-        if ( objects.length == 0 ) this.$.show.innerHtml = '';
-        else {
-          var object = objects.pop();
-          object.hidden = false;
-          this.$.show.appendChild(object);
+
+        this.match(x, y);
+
+        return false
+      },
+
+      _onDropOut: function(e) {
+        if (e.stopPropagation) 
+          e.stopPropagation();
+
+        if (e.preventDefault) 
+          e.preventDefault(); 
+
+        var data = e.dataTransfer.getData("Text").split(';');
+        var y = data[0];
+
+        if ( data.length == 2 ) {
+          var x = data[1];
+          if ( this._match.y.hasOwnProperty(y) 
+            && this._match.y[y].indexOf(x) >= 0 ) {
+            this.match(x, y);
+          }
         }
       },
 
-      // Important event handler that listens for `asq-match` event.
-      // When received an event, it will either add an object into the target
-      // or move an object back to `objects`, i.e. make the object `unmatched`
-      onMatch: function(e) {
-        console.log('onMatch', e.detail.key, e.detail.value, e.detail.isMatch);
-        var target = this.findTargetByAttribute(e.detail.key);
-        var object = this.findObjecttByAttribute(e.detail.value);
+      match: function(xValue, yValue) {
+        ASQ.MatchableBehavior.match.apply(this, [xValue, yValue]);
+      },
 
-        if ( !target || !object ) {
-          return
-        }
-        if ( e.detail.isMatch ) {
-          target.appendChild(object);
+      _onMatched: function(event) {
+        var x = this._xValueToItem(event.detail.x);
+        var y = this._yValueToItem(event.detail.y);
+
+        if ( event.detail.isMatched ) {
+          x.appendChild(y);
         } else {
-          if ( this.$.match.modeState == this.$.match.modes.SINGLE ) {
-            this.putBackObject(object);
-          }
+          this._labelContainer.appendChild(y);
         }
-
-        this.prettyPrint();
-      },
-
-      // Move the `object` back from a `target`.
-      putBackObject: function(object) {
-        if ( this.targets == this ) {
-          object.hidden = true;
-        }
-        this.removeSwitchTag(object);
-        this.objects.appendChild(object);
-
-      },
-
-
-      isMatch: function(k, v) {
-        return this.$.match.isMatch(k.getAttribute(this.valueattr), 
-          v.getAttribute(this.valueattr));
-      },
-
-      /**
-       * Set up a match between target and object
-       * @method match
-       * @param  {Object} k target
-       * @param  {Object} v object
-       */
-      match: function(target, object) {
-
-        k =  typeof target === 'object' ? 
-            target.getAttribute(this.valueattr) : target;
-        v = typeof object === 'object' ? 
-            object.getAttribute(this.valueattr) : object;
         
-        this.$.match.match(k, v);
-        // k.appendChild(v);
       },
 
-      // Find the target by given attribute.
-      findTargetByAttribute: function(attr) {
-
-        for ( var target of this.getTargets() ) {
-          if ( target.getAttribute(this.valueattr) == attr) {
-            return target;
-          }
-        }
-        return null;
-      },
-
-      // Find the object by the given attribute.
-      findObjecttByAttribute: function(attr) {
-        var object = this.getCurrentObject();
-        if ( object && object.getAttribute(this.valueattr) == attr) {
-          return object;
-        }
-
-        for ( var object of this.getUnmatchedObjects() ) {
-          if ( object.getAttribute(this.valueattr) == attr) {
-            return object;
-          }
-        }
-
-        for ( var target of this.getTargets() ) {
-          for ( var object of this.getMatchedObjectsOfTarget(target) ) {
-            if ( object.getAttribute(this.valueattr) == attr) {
-              return object;
-            }
-          }
-        }
-        return null;
-      },
-
-      // Return all the objects inside a target
-      getMatchedObjectsOfTarget: function(target) {
-        return target.querySelectorAll('[object]').array();
-      },
-
-      /**
-       * Get all available **_target_**<sub>s</sub>. NOTE, this method does not return 
-       * the attribute *targets*, but all children of element it.
-       * @method getTargets
-       * @return array an array of all available **_target_**<sub>s</sub>.
-       */
-      getTargets: function() {
-        return this.targets.querySelectorAll('[target]').array();
-      },
-
-      /**
-       * Get all unmatched objects.
-       * @method getUnmatchedObjects 
-       * @return {array} UnmatchedObjects
-       */
-      getUnmatchedObjects: function() {
-        var objects = this.objects.querySelectorAll('[object]');
-        return objects.array().reverse();
-
-      },
-
-      // Just for debug purpose. 
-      // Print out the matches.
-      prettyPrint: function() {
-        var matches = this.$.match.getMatches();
-        console.log('- - - - match', matches.length, ' - - - -');
-        matches.forEach(function(m, index){
-          console.log('  ', index, ' : ' , m.key, m.value);
-        });
-        console.log('\n');
-      },
-
-      /**
-       * The `submit` method returns an object that respresents the submission of this question. The object has the following structure:
-
-           {
-              questionUid: this.uid, 
-              timestamp: new Date(),
-
-              // Array of the result of submit() called for each option of the question
-              submission: [] 
-           }
-       * Only enabled when the `role` of the element is <b>viewer</b>.
-       *
-       * @method submit
-       */
       submit: function() {
-        if ( this.role !== this.roles.VIEWER ) {
+        if ( ! this.hasRole(this.role, this.roles.VIEWER) ) {
           return;
         }
 
-        var submission = this.$.match.getMatches();
-
-        this.prettyPrint();
-
         return {
-          questionUid: this.uid,
+          uid: this.uid,
           timestamp: new Date(),
-          submission: submission
-        };
+          matches: this._match.x
+        }
       }
 
-    }
-
-    ASQ.asqify(p, true);
-    Polymer('asq-buckets-q', p);
-
-  })();
+    });
   </script>
-</polymer-element>
+
+</dom-module>

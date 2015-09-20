@@ -1,22 +1,20 @@
 {
   "name": "asq-buckets-q",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/ASQ-USI-Elements/asq-buckets-q",
   "authors": [
     "Vasileios Triglianos <triglian@gmail.com>",
     "Zhenfei Nie <zhenfei.nie@gmail.com>"
   ],
-  "description": "ASQ Buckets element.",
+  "description": "ASQ buckets element.",
   "keywords": [
     "ASQ"
   ],
   "license": "MIT",
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.5.1",
-    "paper-button": "Polymer/paper-button#^0.5.2",
-    "core-icons": "Polymer/core-icons#^0.5.2",
-    "asq-base": "ASQ-USI-Elements/asq-base#master",
-    "asq-match": "ASQ-USI-Elements/asq-match#master"
+    "polymer": "Polymer/Polymer#~1.0.8",
+    "asq-base": "ASQ-USI-Elements/asq-base#feat-polymer-1",
+    "asq-match": "ASQ-USI-Elements/asq-match#feat-polymer-1"
   },
   "ignore": [ "index.js", "lib", "package.json", "node_modules", ".npmignore", "test/server"],
   "devDependencies": {
