@@ -16,8 +16,12 @@
 
   <style is="custom-style">
 
-    .vertical-section {
-      @apply(--layout-horizontal);
+    body{
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .container {
+      @apply(--layout-vertical);
       @apply(--layout-around-justified);
       @apply(--layout-wrap);
     }
@@ -132,47 +136,51 @@
       border-color: #398439;
     }
 
+    h4 {
+      margin: 10px auto;
+    }
+
   </style>
 
 </head>
 <body>
 
-  <div class="vertical-section-container">
-    <div class="vertical-section">
-      <asq-buckets-q id="m" 
-        mode="1-3" 
-        x-matchable="div[bucket]" 
-        y-matchable="div[label]" 
-        attr-for-matched="s-name"
-        matched-attribute="matched"
-        label-container="[labels]"
-        matched-class="label-success">
 
-        <div buckets>
-          <div s-name="Europe" bucket><b>Europe</b></div>
-          <div s-name="North America" bucket><b>North America</b></div>
-          <div s-name="Middle East" bucket><b>Middle East</b></div>
-        </div>
-        
-        <div labels>
-          <div s-name="New York" label class="label-primary">New York</div>
-          <div s-name="London" label class="label-primary">London</div>
-          <div s-name="Zurich" label class="label-primary">Zurich</div>
-          <div s-name="Jerusalem" label class="label-primary">Jerusalem</div>
-          <div s-name="Chicago" label class="label-primary">Chicago</div>
-          <div s-name="Lugano" label class="label-primary">Lugano</div>
-        </div>
-      </asq-buckets-q>
-    </div>
+  <div class="container">
+    <h4>Drag the labels (name of cites) to match the buckets.</h4>
+    <asq-buckets-q  
+      mode="1-3" 
+      x-matchable="div[bucket]" 
+      y-matchable="div[label]" 
+      attr-for-matched="s-name"
+      matched-attribute="matched"
+      label-container="[labels]"
+      matched-class="label-success">
+
+      <div buckets>
+        <div s-name="Europe" bucket><b>Europe</b></div>
+        <div s-name="North America" bucket><b>North America</b></div>
+        <div s-name="Middle East" bucket><b>Middle East</b></div>
+      </div>
+      
+      <div labels>
+        <div s-name="New York" label class="label-primary">New York</div>
+        <div s-name="London" label class="label-primary">London</div>
+        <div s-name="Zurich" label class="label-primary">Zurich</div>
+        <div s-name="Jerusalem" label class="label-primary">Jerusalem</div>
+        <div s-name="Chicago" label class="label-primary">Chicago</div>
+        <div s-name="Lugano" label class="label-primary">Lugano</div>
+      </div>
+    </asq-buckets-q>
   </div>
 
 
 
   <script>
-
+    var m = document.querySelector('asq-buckets-q');
 
     m.addEventListener('asq-matched', function(e) {
-      prettyPrint();
+      // prettyPrint();
     }, true);
 
     prettyPrint = function() {
