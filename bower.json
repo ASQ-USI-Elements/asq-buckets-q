@@ -14,7 +14,7 @@
   "dependencies": {
     "polymer": "Polymer/Polymer#~1.0.8",
     "asq-base": "ASQ-USI-Elements/asq-base#feat-polymer-1",
-    "asq-match": "ASQ-USI-Elements/asq-match#feat-polymer-1",
+    "asq-matchable-behavior": "ASQ-USI-Elements/asq-matchable-behavior#feat-polymer-1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.3",
     "paper-styles": "PolymerElements/paper-styles#~1.0.11"
   },
