@@ -14,9 +14,18 @@
   "dependencies": {
     "polymer": "Polymer/Polymer#~1.0.8",
     "asq-base": "ASQ-USI-Elements/asq-base#feat-polymer-1",
-    "asq-match": "ASQ-USI-Elements/asq-match#feat-polymer-1"
+    "asq-match": "ASQ-USI-Elements/asq-match#feat-polymer-1",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.3",
+    "paper-styles": "PolymerElements/paper-styles#~1.0.11"
   },
-  "ignore": [ "index.js", "lib", "package.json", "node_modules", ".npmignore", "test/server"],
+  "ignore": [
+    "index.js",
+    "lib",
+    "package.json",
+    "node_modules",
+    ".npmignore",
+    "test/server"
+  ],
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^2.0.0-rc1"
   }
