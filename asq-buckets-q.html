@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../asq-base/asq-base.html">
-<link rel="import" href="../asq-matchable-behavior/asq-matchable-behavior.html">
 
+<link rel="import" href="elements/asq-buckets-q-viewer.html">
+<link rel="import" href="elements/asq-buckets-q-presenter.html">
 
 <!--
 `asq-buckets-q` is a kind of matching question. To use this question, you need to difine two sets, `X` set and `Y` set, using `x-matchable` and `y-matchable`.
@@ -54,11 +55,37 @@ Examples:
 
   <template>
     <template is="dom-if" if="{{hasRole(role, roles.VIEWER)}}" restamp>
-      <content select="*"></content>
+      <asq-buckets-q-viewer
+        role="viewer" 
+        uid="[[uid]]"
+        mode="{{mode}}" 
+        x-matchable="{{xMatchable}}" 
+        y-matchable="{{yMatchable}}" 
+        attr-for-matched="{{attrForMatched}}"
+        matched-attribute="{{matchedAttribute}}"
+        matched-class="{{matchedClass}}"
+        label-container="{{labelContainer}}"
+        on-dragging-class="{{onDraggingClass}}"
+        event-bus="[[eventBus]]">
+        <content></content>
+      </asq-buckets-q-viewer>
     </template>
 
     <template is="dom-if" if="{{hasRole(role, roles.PRESENTER)}}" restamp>
-      <p>presenter viewer</p>
+      <asq-buckets-q-presenter
+        role="presenter" 
+        uid="[[uid]]"
+        mode="{{mode}}" 
+        x-matchable="{{xMatchable}}" 
+        y-matchable="{{yMatchable}}" 
+        attr-for-matched="{{attrForMatched}}"
+        matched-attribute="{{matchedAttribute}}"
+        matched-class="{{matchedClass}}"
+        label-container="{{labelContainer}}"
+        on-dragging-class="{{onDraggingClass}}"
+        event-bus="[[eventBus]]">
+        <content></content>
+      </asq-buckets-q-presenter>
     </template>
     
   </template>
@@ -68,177 +95,52 @@ Examples:
       is: 'asq-buckets-q',
 
       behaviors: [
-        ASQ.asqQuestionElementBehavior,
-        ASQ.MatchableBehavior
+        ASQ.asqQuestionElementBehavior
       ],
 
-      created: function() {
-        this.listen(this, 'asq-matched', '_onMatched');
+
+      properties: {
+        /**
+         * Event bus to communicate with ASQ
+         */
+        eventBus: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      api: undefined,
+
+      created: function () {
+        document.addEventListener('asq-ready', function (evt) {
+          this.eventBus = evt.detail.asqEventBus
+        }.bind(this));
+
+        this.listen(this, 'role-changed', '_onRoleChanged');
       },
 
       attached: function() {
         this.async(function() {
-          this._initItems();
+          this._setApi();
         })
       },
 
-      _labelContainer: undefined,
-
-
-      properties: {
-        onDraggingClass: {
-          type: String,
-          value: 'dragging',
-          notify: true
-        },
-
-        labelContainer: {
-          type: String,
-          value: '',
-          observer: '_labelContainerChanged'
-        }
+      _onRoleChanged: function() {
+        this._setApi();
       },
 
-      _labelContainerChanged: function() {
-        var container = Polymer.dom(this).querySelector(this.labelContainer);
-
-        this._labelContainer = container ? container : this;
+      _setApi: function() {
+        var selector = 'asq-buckets-q-' + this.role;
+        this.api = this.$$(selector);
       },
 
-      _initItems: function() {
-
-        this.xItems.forEach(function(x) {
-          x.addEventListener('dragenter', this._onDragEnter);
-          x.addEventListener('dragleave', this._onDragLeave);
-          x.addEventListener('dragover', this._onDragOver);
-          x.addEventListener('drop', this._onDrop.bind(this));
-        }, this);
-
-        this.yItems.forEach(function(y) {
-          y.setAttribute('draggable', true);
-
-          y.addEventListener('dragstart', this._onDragStart.bind(this));
-          y.addEventListener('dragend', this._onDragEnd.bind(this));
-          
-        }, this);
-
-
-        // 
-        document.body.addEventListener('drop', this._onDropOut.bind(this));
-
-        document.body.addEventListener('dragenter', function(e) {
-          if (e.preventDefault) e.preventDefault(); 
-        });
-
-        document.body.addEventListener('dragover', function(e) {
-          if (e.preventDefault) e.preventDefault(); 
-          return false
-        });
-      },
-
-      _onDragStart: function(e) {
-        if ( this.onDraggingClass ) 
-          e.currentTarget.classList.toggle(this.onDraggingClass, true);
-
-        var data = this._valueForItem(e.currentTarget);
-
-        // store the current bucket
-        var parentElement = e.target.parentElement;
-        if ( this.xItems.indexOf(parentElement) >= 0 ) {
-          data = data + ';' + this._valueForItem(parentElement);
-        }
-        e.dataTransfer.dropEffect = 'move';
-        e.dataTransfer.setData('Text', data);
-      },
-
-      _onDragEnd: function(e) {
-        if (e.preventDefault) e.preventDefault();
-        if ( this.onDraggingClass ) 
-          e.currentTarget.classList.toggle(this.onDraggingClass, false);
-      },
-
-      _onDragEnter: function(e) {
-        if (e.preventDefault) {
-          e.preventDefault(); 
-        }
-        e.currentTarget.classList.toggle('over', true);
-      },
-
-      _onDragOver: function(e) {
-        e.preventDefault();
-        return false
-      },
-
-      _onDragLeave: function(e) {
-        e.currentTarget.classList.toggle('over', false);
-      },
-
-      _onDrop: function(e) {
-        if (e.stopPropagation) 
-          e.stopPropagation();
-
-        if (e.preventDefault) 
-          e.preventDefault(); 
-
-        e.currentTarget.classList.toggle('over', false);
-        
-        var x = this._valueForItem(e.currentTarget);
-        var y = e.dataTransfer.getData('Text').split(';')[0];
-
-        if ( this.isMatched(x, y) ) {
-          // do nothing
-          return
-        }
-
-        this.match(x, y);
-
-        return false
-      },
-
-      _onDropOut: function(e) {
-        if (e.stopPropagation) 
-          e.stopPropagation();
-
-        if (e.preventDefault) 
-          e.preventDefault(); 
-
-        var data = e.dataTransfer.getData("Text").split(';');
-        var y = data[0];
-
-        if ( data.length == 2 ) {
-          var x = data[1];
-          if ( this._match.y.hasOwnProperty(y) 
-            && this._match.y[y].indexOf(x) >= 0 ) {
-            this.match(x, y);
+      submit: function () {
+        if (this.role == this.roles.VIEWER) {
+          var el = this.$$('asq-buckets-q-viewer');
+          if (!el) {
+            throw new Error('submit(): expected asq-css-select-q-viewer element to exist');
           }
-        }
-      },
-
-      match: function(xValue, yValue) {
-        ASQ.MatchableBehavior.match.apply(this, [xValue, yValue]);
-      },
-
-      _onMatched: function(event) {
-        var x = this._xValueToItem(event.detail.x);
-        var y = this._yValueToItem(event.detail.y);
-
-        if ( event.detail.isMatched ) {
-          x.appendChild(y);
-        } else {
-          this._labelContainer.appendChild(y);
-        }
-        
-      },
-
-      submit: function() {
-        if ( ! this.hasRole(this.role, this.roles.VIEWER) ) {
-          return;
-        }
-
-        return {
-          uid: this.uid,
-          timestamp: new Date(),
-          matches: this._match.x
+          return el.submit();
         }
       }
 
