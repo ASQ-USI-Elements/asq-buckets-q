@@ -107,7 +107,7 @@ Examples:
           type: Object,
           notify: true
         },
-        
+
         onDraggingClass: {
           type: String,
           value: 'dragging',
@@ -116,12 +116,10 @@ Examples:
 
         labelContainer: {
           type: String,
-          value: '',
-          observer: '_labelContainerChanged'
+          value: ''
         },
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * The attribute value of an element for `matched`.
          *
@@ -134,7 +132,6 @@ Examples:
         },
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * This is a CSS selector string. Define the items that
          * are divided into `X` set.
@@ -143,7 +140,6 @@ Examples:
         xMatchable: String,
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * This is a CSS selector string. Define the items that
          * are divided into `Y` set.
@@ -152,7 +148,6 @@ Examples:
         yMatchable: String,
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * The class to set on elements when matched.
          *
@@ -165,7 +160,6 @@ Examples:
         },
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * The attribute to set on elements when matched.
          *
@@ -178,7 +172,6 @@ Examples:
         },
 
         /**
-         * *Overriten from asq-matchable-behavior.*
          * 
          * The mode is to define the relationship between two sets.
          * It can be `1-1`, `m-m`, `a-m`, `m-b` or `a-b`. 
@@ -189,8 +182,7 @@ Examples:
           type: String,
           value: '1-1',
           notify: true,
-          reflectToAttribute: true,
-          observer: '_modeChanged'
+          reflectToAttribute: true
         },
 
         /**
@@ -208,8 +200,7 @@ Examples:
          */
         value: {
           type: String,
-          value: '{}',
-          observer: '_valueChanged'
+          value: '{}'
         }
       },
 
