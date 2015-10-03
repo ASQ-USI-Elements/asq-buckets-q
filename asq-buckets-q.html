@@ -106,6 +106,110 @@ Examples:
         eventBus: {
           type: Object,
           notify: true
+        },
+        
+        onDraggingClass: {
+          type: String,
+          value: 'dragging',
+          notify: true
+        },
+
+        labelContainer: {
+          type: String,
+          value: '',
+          observer: '_labelContainerChanged'
+        },
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * The attribute value of an element for `matched`.
+         *
+         * @attribute attrForSelected
+         * @type {string}
+         */
+        attrForMatched: {
+          type: String,
+          value: 'name'
+        },
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * This is a CSS selector string. Define the items that
+         * are divided into `X` set.
+         *
+         */
+        xMatchable: String,
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * This is a CSS selector string. Define the items that
+         * are divided into `Y` set.
+         *
+         */
+        yMatchable: String,
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * The class to set on elements when matched.
+         *
+         * @attribute selectedClass
+         * @type {string}
+         */
+        matchedClass: {
+          type: String,
+          value: 'asq-matched'
+        },
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * The attribute to set on elements when matched.
+         *
+         * @attribute selectedAttribute
+         * @type {string}
+         */
+        matchedAttribute: {
+          type: String,
+          value: null
+        },
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * The mode is to define the relationship between two sets.
+         * It can be `1-1`, `m-m`, `a-m`, `m-b` or `a-b`. 
+         * a and b are any postive integer number.
+         * 
+         */
+        mode: {
+          type: String,
+          value: '1-1',
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_modeChanged'
+        },
+
+        /**
+         * This property is used to specify the matches through a valid 
+         * JSON format string, which is exactlly the stringify string of
+         * `matches`, i.e. JSON.stringify(matches). An example is 
+         * like follows.
+         *
+         *      x.value='{
+         *        "Europe":["New York"],
+         *        "North America":["Jerusalem"],
+         *        "Middle East":["Lugano"]
+         *      }'
+         *      
+         */
+        value: {
+          type: String,
+          value: '{}',
+          observer: '_valueChanged'
         }
       },
 
