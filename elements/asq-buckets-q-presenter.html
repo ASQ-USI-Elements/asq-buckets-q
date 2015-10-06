@@ -20,6 +20,7 @@
   <style is="custom-style">
     :host {
       display: block;
+      --paper-tabs-selection-bar-color: #333;
     }
 
     #container {
@@ -37,7 +38,12 @@
     }
 
     #submissionList {
-      @apply(--layout-flex-1);
+      @apply(--layout-flex);
+    }
+
+    #submissionListWrapper{
+      @apply(--layout-flex);
+      display: none;
     }
 
     #submissionList paper-item{
@@ -47,6 +53,10 @@
       cursor: pointer;
       font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
       @apply(--shadow-elevation-2dp);
+      outline:none;
+    }
+    #submissionList paper-item[focused]{
+      background-color: var(--google-grey-300);
     }
   </style>
 
@@ -58,10 +68,9 @@
       
       <div id="list-container">
         <paper-tabs selected="{{_selectedTab}}" selected="0" selected-attribute="active" noink role="tablist"> 
-          <paper-tab role="tab">Submissions</paper-tab>    
-          <paper-tab role="tab">Statistics</paper-tab>
+          <paper-tab role="tab" on-click="toggleSubmissionList">Submissions</paper-tab>    
         </paper-tabs>
-        <iron-pages selected="{{_selectedTab}}">
+        <div id="submissionListWrapper" >
           <iron-list id="submissionList" items="[[_submissions]]" as="submission" selection-enabled selected-item="{{_selectedSubmissionItem}}">
             <template>
               <paper-item>#<span>[[index]]</span>&nbsp;&nbsp;<span>[[_computeItemText(submission)]]</span>
@@ -69,7 +78,7 @@
             </template>
           </iron-list>
           <div></div>
-        </iron-pages> 
+        </div> 
       </div>
     </section>
     
@@ -152,6 +161,12 @@
       get yItems() {
         var nodes = Polymer.dom(this.parent).querySelectorAll(this.yMatchable || '*');
         return Array.prototype.filter.call(nodes, this._bindFilterItem);
+      },
+
+      toggleSubmissionList: function(evt, detail){
+        var current = this.$.submissionListWrapper.style.display;
+        this.$.submissionListWrapper.style.display = (current == 'flex') ? 'none': 'flex';
+        this.$.submissionList._update();
       },
 
 
