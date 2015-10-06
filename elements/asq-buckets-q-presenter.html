@@ -135,8 +135,27 @@
 
         _submissions: {
           observer: '_submissionsChanged'
-        }
+        },
 
+        disabled: { 
+          type: Boolean,
+          value: false,
+          notify: true, 
+          observer: '_disabledChanged',
+          reflectToAttribute: true
+        },
+
+        disabledClass: {
+          type: String,
+          value: 'asq-disabled'
+        }
+      },
+
+      _disabledChanged: function(disabled) {
+        this.yItems.forEach(function(y) {
+          y.disabled = this.disabled;
+          y.classList.toggle(this.disabledClass, this.disabled);
+        }, this);
       },
 
       /**

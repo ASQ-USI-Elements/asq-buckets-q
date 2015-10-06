@@ -58,6 +58,7 @@ Examples:
       <asq-buckets-q-viewer
         role="viewer" 
         uid="[[uid]]"
+        disabled="{{disabled}}"
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
@@ -75,6 +76,7 @@ Examples:
       <asq-buckets-q-presenter
         role="presenter" 
         uid="[[uid]]"
+        disabled="{{disabled}}"
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
@@ -100,6 +102,13 @@ Examples:
 
 
       properties: {
+
+        disabled: { 
+          type: Boolean,
+          value: false,
+          notify: true, 
+          reflectToAttribute: true
+        },
         /**
          * Event bus to communicate with ASQ
          */
