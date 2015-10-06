@@ -116,7 +116,7 @@ Examples:
 
         labelContainer: {
           type: String,
-          value: ''
+          value: '[labels]'
         },
 
         /**
@@ -137,7 +137,10 @@ Examples:
          * are divided into `X` set.
          *
          */
-        xMatchable: String,
+        xMatchable: {
+          type: String,
+          value: '[bucket]'
+        },
 
         /**
          * 
@@ -145,8 +148,10 @@ Examples:
          * are divided into `Y` set.
          *
          */
-        yMatchable: String,
-
+        yMatchable: {
+          type: String,
+          value: '[label]'
+        },
         /**
          * 
          * The class to set on elements when matched.
@@ -168,7 +173,7 @@ Examples:
          */
         matchedAttribute: {
           type: String,
-          value: null
+          value: 'matched'
         },
 
         /**
