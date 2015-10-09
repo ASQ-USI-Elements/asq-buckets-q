@@ -73,7 +73,7 @@
         <div id="submissionListWrapper" >
           <iron-list id="submissionList" items="[[_submissions]]" as="submission" selection-enabled selected-item="{{_selectedSubmissionItem}}">
             <template>
-              <paper-item>#<span>[[index]]</span>&nbsp;&nbsp;<span>[[_computeItemText(submission)]]</span>
+              <paper-item>#<span>[[indexPlusOne(index)]]</span>&nbsp;&nbsp;<span>[[_computeItemText(submission)]]</span>
               </paper-item>
             </template>
           </iron-list>
@@ -373,8 +373,11 @@
       _eventBusChanged: function (eventBus) {
         if(!eventBus) return;
         eventBus.on('asq:question_type', this._onQuestionType.bind(this));
-      }
+      },
 
+      indexPlusOne: function(index){
+        return ++index;
+      }
     });
   </script>
 
