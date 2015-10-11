@@ -20,7 +20,6 @@
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.3",
     "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.3",
     "iron-list": "polymerelements/iron-list#~1.1.2",
-    "iron-pages": "PolymerElements/iron-pages#~1.0.3",
     "paper-item": "PolymerElements/paper-item#~1.0.3",
     "paper-tabs": "polymerelements/paper-tabs#~1.0.3",
     "iron-component-page": "PolymerElements/iron-component-page#~1.0.5"

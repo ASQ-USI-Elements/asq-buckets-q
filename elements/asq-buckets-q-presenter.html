@@ -9,7 +9,6 @@
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../../iron-list/iron-list.html">
-<link rel="import" href="../../iron-pages/iron-pages.html">
 <link rel="import" href="../../paper-drawer-panel/paper-drawer-panel.html">
 
 
@@ -32,18 +31,13 @@
       @apply(--layout-vertical);
     }
 
-    #list-container iron-pages{
+    #submissionListWrapper{
       @apply(--layout-flex);
-      @apply(--layout-vertical);
+      display: none;
     }
 
     #submissionList {
       @apply(--layout-flex);
-    }
-
-    #submissionListWrapper{
-      @apply(--layout-flex);
-      display: none;
     }
 
     #submissionList paper-item{
@@ -68,7 +62,7 @@
       
       <div id="list-container">
         <paper-tabs selected="{{_selectedTab}}" selected="0" selected-attribute="active" noink role="tablist"> 
-          <paper-tab role="tab" on-click="toggleSubmissionList">Submissions</paper-tab>    
+          <paper-tab role="tab" on-click="toggleSubmissionList">Submissions</paper-tab> 
         </paper-tabs>
         <div id="submissionListWrapper" >
           <iron-list id="submissionList" items="[[_submissions]]" as="submission" selection-enabled selected-item="{{_selectedSubmissionItem}}">
@@ -77,7 +71,6 @@
               </paper-item>
             </template>
           </iron-list>
-          <div></div>
         </div> 
       </div>
     </section>
@@ -187,7 +180,6 @@
         this.$.submissionListWrapper.style.display = (current == 'flex') ? 'none': 'flex';
         this.$.submissionList._update();
       },
-
 
       _computeItemText: function(item) {
         if (! item) return;
