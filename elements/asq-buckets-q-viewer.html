@@ -178,7 +178,7 @@
        * @type Array
        */
       get xItems() {
-        var nodes = Polymer.dom(this.parent).querySelectorAll(this.xMatchable || '*');
+        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.xMatchable || '*');
         return Array.prototype.filter.call(nodes, this._bindFilterItem);
       },
 
@@ -190,12 +190,12 @@
        * @type Array
        */
       get yItems() {
-        var nodes = Polymer.dom(this.parent).querySelectorAll(this.yMatchable || '*');
+        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.yMatchable || '*');
         return Array.prototype.filter.call(nodes, this._bindFilterItem);
       },
 
       _labelContainerChanged: function() {
-        var container = Polymer.dom(this.parent).querySelector(this.labelContainer);
+        var container = Polymer.dom(this.parentNode).querySelector(this.labelContainer);
 
         this._labelContainer = container ? container : this;
       },
