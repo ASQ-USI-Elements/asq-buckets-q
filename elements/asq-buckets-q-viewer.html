@@ -31,23 +31,24 @@
 
       attached: function() {
         this.async(function() {
+          this._setYItems();
           this._initItems();
         })
       },
 
-      _labelContainer: undefined,
+      get _labelContainer() {
+        var container = Polymer.dom(this).queryDistributedElements(this.yMatchable);
+        if ( Array.isArray(container) && container.length >=1 ) {
+          return container[0]
+        }
+        return this
+      },
 
       properties: {
         onDraggingClass: {
           type: String,
           value: 'dragging',
           notify: true
-        },
-
-        labelContainer: {
-          type: String,
-          value: '',
-          observer: '_labelContainerChanged'
         },
 
         eventBus: {
@@ -85,7 +86,20 @@
          * are divided into `Y` set.
          *
          */
-        yMatchable: String,
+        yMatchable: {
+          type: String,
+          observer: '_yMatchableChanged'
+        },
+
+        xBucket: {
+          type: String,
+          value: '.bucket'
+        },
+
+        yLabel: {
+          type: String,
+          value: '.label'
+        },
 
         /**
          * *Overriten from asq-matchable-behavior.*
@@ -162,6 +176,19 @@
         }
       },
 
+      _yMatchableChanged: function() {
+        this._setYItems();
+      },
+
+      _setYItems: function() {
+        var container = Polymer.dom(this).queryDistributedElements(this.yMatchable || '*');
+        var nodes = [];
+        if ( container && Array.isArray(container) && container.length > 0) {
+          nodes = container[0].children;
+        }
+        this.__yItems__ = Array.prototype.filter.call(nodes, this._bindFilterItem);
+      },
+
       _disabledChanged: function(disabled) {
         this.yItems.forEach(function(y) {
           y.disabled = this.disabled;
@@ -169,6 +196,7 @@
           y.setAttribute('draggable', !this.disabled);
         }, this);
       },
+
 
       /**
        * *Overriten from asq-matchable-behavior.*
@@ -178,7 +206,11 @@
        * @type Array
        */
       get xItems() {
-        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.xMatchable || '*');
+        var container = Polymer.dom(this).queryDistributedElements(this.xMatchable || '*');
+        var nodes = [];
+        if ( container && Array.isArray(container) && container.length > 0) {
+          nodes = container[0].children
+        }
         return Array.prototype.filter.call(nodes, this._bindFilterItem);
       },
 
@@ -190,15 +222,10 @@
        * @type Array
        */
       get yItems() {
-        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.yMatchable || '*');
-        return Array.prototype.filter.call(nodes, this._bindFilterItem);
+        if (!this.__yItems__) this._setYItems();
+        return this.__yItems__;
       },
 
-      _labelContainerChanged: function() {
-        var container = Polymer.dom(this.parentNode).querySelector(this.labelContainer);
-
-        this._labelContainer = container ? container : this;
-      },
 
       _initItems: function() {
 
@@ -342,7 +369,10 @@
           return;
         if (evt.questionType == 'asq-buckets-q') {
           if (evt.type == 'restoreViewer') {
-            this._onRestoreViewer(evt);
+            // use async
+            this.async(function() {
+              this._onRestoreViewer(evt);
+            })
           }
         }
       },

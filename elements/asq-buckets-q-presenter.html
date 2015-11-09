@@ -92,11 +92,18 @@
 
       attached: function() {
         this.async(function() {
+          this._setYItems();
           this._initItems();
         })
       },
 
-      _labelContainer: undefined,
+      get _labelContainer() {
+        var container = Polymer.dom(this).queryDistributedElements(this.yMatchable);
+        if ( Array.isArray(container) && container.length >=1 ) {
+          return container[0]
+        }
+        return this
+      },
 
       properties: {
         onDraggingClass: {
@@ -105,11 +112,6 @@
           notify: true
         },
 
-        labelContainer: {
-          type: String,
-          value: '',
-          observer: '_labelContainerChanged'
-        },
 
         eventBus: {
           type: Object,
@@ -141,7 +143,36 @@
         disabledClass: {
           type: String,
           value: 'asq-disabled'
-        }
+        },
+
+        xBucket: {
+          type: String,
+          value: '.bucket'
+        },
+
+        yLabel: {
+          type: String,
+          value: '.label'
+        },
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * This is a CSS selector string. Define the items that
+         * are divided into `X` set.
+         *
+         */
+        xMatchable: String,
+
+        /**
+         * *Overriten from asq-matchable-behavior.*
+         * 
+         * This is a CSS selector string. Define the items that
+         * are divided into `Y` set.
+         *
+         */
+        yMatchable: String,
+
       },
 
       _disabledChanged: function(disabled) {
@@ -159,20 +190,37 @@
        * @type Array
        */
       get xItems() {
-        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.xMatchable || '*');
+        var container = Polymer.dom(this).queryDistributedElements(this.xMatchable || '*');
+        var nodes = [];
+        if ( container && Array.isArray(container) && container.length > 0) {
+          nodes = container[0].children
+        }
         return Array.prototype.filter.call(nodes, this._bindFilterItem);
       },
 
       /**
-       * Overriten from asq-matchable-behavior.
+       * *Overriten from asq-matchable-behavior.*
        * Returns an array of items in `Y` set.
        *
        * @property items
        * @type Array
        */
       get yItems() {
-        var nodes = Polymer.dom(this.parentNode).querySelectorAll(this.yMatchable || '*');
-        return Array.prototype.filter.call(nodes, this._bindFilterItem);
+        if (!this.__yItems__) this._setYItems();
+        return this.__yItems__;
+      },
+
+      _yMatchableChanged: function() {
+        this._setYItems();
+      },
+
+      _setYItems: function() {
+        var container = Polymer.dom(this).queryDistributedElements(this.yMatchable || '*');
+        var nodes = [];
+        if ( container && Array.isArray(container) && container.length > 0) {
+          nodes = container[0].children;
+        }
+        this.__yItems__ = Array.prototype.filter.call(nodes, this._bindFilterItem);
       },
 
       toggleSubmissionList: function(evt, detail){
@@ -203,11 +251,6 @@
         this.$.submissionList.selectItem(item);
       },
 
-      _labelContainerChanged: function() {
-        var container = Polymer.dom(this.parentNode).querySelector(this.labelContainer);
-
-        this._labelContainer = container ? container : this;
-      },
 
       _initItems: function() {
 
@@ -341,7 +384,10 @@
           if (evt.type == 'progress') {
             this._onProgress(evt);
           } else if (evt.type == 'restorePresenter') {
-            this._onRestorePresenter(evt);
+            // use async
+            this.async(function() {
+              this._onRestorePresenter(evt);
+            })
           }
         }
       },
