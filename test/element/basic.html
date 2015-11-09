@@ -14,29 +14,27 @@
 <body>
 
   <!-- You use the document as a place to set up your fixtures. -->
-  <asq-buckets-q 
-    id="m"
+  <asq-buckets-q id="m" role="viewer"
     mode="1-3" 
-    x-matchable="div[bucket]" 
-    y-matchable="div[label]" 
+    x-matchable="div[buckets]" 
+    y-matchable="div[labels]" 
     attr-for-matched="s-name"
     matched-attribute="matched"
-    label-container="[labels]"
     matched-class="label-success">
 
     <div buckets>
-      <div s-name="Europe" bucket><b>Europe</b></div>
-      <div s-name="North America" bucket><b>North America</b></div>
-      <div s-name="Middle East" bucket><b>Middle East</b></div>
+      <div s-name="Europe" class="bucket"><b>Europe</b></div>
+      <div s-name="North America" class="bucket"><b>North America</b></div>
+      <div s-name="Middle East" class="bucket"><b>Middle East</b></div>
     </div>
     
     <div labels>
-      <div s-name="New York" label class="label-primary">New York</div>
-      <div s-name="London" label class="label-primary">London</div>
-      <div s-name="Zurich" label class="label-primary">Zurich</div>
-      <div s-name="Jerusalem" label class="label-primary">Jerusalem</div>
-      <div s-name="Chicago" label class="label-primary">Chicago</div>
-      <div s-name="Lugano" label class="label-primary">Lugano</div>
+      <div s-name="New York"  class="label label-primary">New York</div>
+      <div s-name="London"  class="label label-primary">London</div>
+      <div s-name="Zurich"  class="label label-primary">Zurich</div>
+      <div s-name="Jerusalem"  class="label label-primary">Jerusalem</div>
+      <div s-name="Chicago"  class="label label-primary">Chicago</div>
+      <div s-name="Lugano"  class="label label-primary">Lugano</div>
     </div>
   </asq-buckets-q>
 
@@ -53,72 +51,72 @@
 
       test('test `value` property', function() {
         // order is important
-        m.api.match('Europe', 'New York');
-        m.api.match('North America', 'London');
-        m.api.match('Middle East', 'Lugano');
+        m._api.match('Europe', 'New York');
+        m._api.match('North America', 'London');
+        m._api.match('Middle East', 'Lugano');
         
         var s = '{"Europe":["New York"],"North America":["London"],"Middle East":["Lugano"]}';
 
-        assert.equal(m.api.value, s);
+        assert.equal(m._api.value, s);
 
-        m.api.clear();
+        m._api.clear();
 
-        assert.equal(m.api.value, '{"Europe":[],"North America":[],"Middle East":[]}');
+        assert.equal(m._api.value, '{"Europe":[],"North America":[],"Middle East":[]}');
 
-        assert.isFalse(m.api.isMatched('Europe', 'New York'));
-        assert.isFalse(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isFalse(m.api.isMatched('North America', 'London'));
+        assert.isFalse(m._api.isMatched('Europe', 'New York'));
+        assert.isFalse(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isFalse(m._api.isMatched('North America', 'London'));
       });
 
       test('test `value` property 2', function() {
-        m.api.clear();
+        m._api.clear();
 
         var s = '{"Europe":["New York"],"North America":["London"],"Middle East":["Lugano"]}';
 
-        m.api.value = s;
+        m._api.value = s;
 
-        assert.equal(m.api.value, s);
+        assert.equal(m._api.value, s);
 
-        assert.isTrue(m.api.isMatched('Europe', 'New York'));
-        assert.isTrue(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isTrue(m.api.isMatched('North America', 'London'));
+        assert.isTrue(m._api.isMatched('Europe', 'New York'));
+        assert.isTrue(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isTrue(m._api.isMatched('North America', 'London'));
 
-        m.api.clear();
+        m._api.clear();
 
-        assert.equal(m.api.value, '{"Europe":[],"North America":[],"Middle East":[]}');
+        assert.equal(m._api.value, '{"Europe":[],"North America":[],"Middle East":[]}');
 
-        assert.isFalse(m.api.isMatched('Europe', 'New York'));
-        assert.isFalse(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isFalse(m.api.isMatched('North America', 'London'));
+        assert.isFalse(m._api.isMatched('Europe', 'New York'));
+        assert.isFalse(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isFalse(m._api.isMatched('North America', 'London'));
       });
 
       test('test `value` property (extreme condition)', function() {
         var s = '{"Europe":["New York"],"North America":["London"],"Middle East":["Lugano"]}';
 
-        m.api.value = s;
-        assert.equal(m.api.value, s);
-        assert.isTrue(m.api.isMatched('Europe', 'New York'));
-        assert.isTrue(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isTrue(m.api.isMatched('North America', 'London'));
+        m._api.value = s;
+        assert.equal(m._api.value, s);
+        assert.isTrue(m._api.isMatched('Europe', 'New York'));
+        assert.isTrue(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isTrue(m._api.isMatched('North America', 'London'));
 
         // Wrong value will not be applied.
         var s2 = '{"Europe":["New York", "London", "Lugano", "Zurich"],"North America":[],"Middle East":[]}';
-        m.api.value = s2;
+        m._api.value = s2;
 
-        assert.equal(m.api.value, s);
-        assert.isTrue(m.api.isMatched('Europe', 'New York'));
-        assert.isTrue(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isTrue(m.api.isMatched('North America', 'London'));
+        assert.equal(m._api.value, s);
+        assert.isTrue(m._api.isMatched('Europe', 'New York'));
+        assert.isTrue(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isTrue(m._api.isMatched('North America', 'London'));
 
 
         // Wrong value will not be applied.
         var s3 = '{"Europegcklj;klxx":["N23123ew York", "Lo12903ndon", "Lugano", "Zurich"],"North America":[],"Msadiddle East":[]}';
-        m.api.value = s3;
+        m._api.value = s3;
 
-        assert.equal(m.api.value, s);
-        assert.isTrue(m.api.isMatched('Europe', 'New York'));
-        assert.isTrue(m.api.isMatched('Middle East', 'Lugano'));
-        assert.isTrue(m.api.isMatched('North America', 'London'));
+        assert.equal(m._api.value, s);
+        assert.isTrue(m._api.isMatched('Europe', 'New York'));
+        assert.isTrue(m._api.isMatched('Middle East', 'Lugano'));
+        assert.isTrue(m._api.isMatched('North America', 'London'));
 
       });
       
