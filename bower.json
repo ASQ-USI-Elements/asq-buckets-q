@@ -13,8 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "polymer": "Polymer/Polymer#~1.1.3",
-    "asq-base": "ASQ-USI-Elements/asq-base#feat-polymer-1",
-    "asq-matchable-behavior": "ASQ-USI-Elements/asq-matchable-behavior#feat-polymer-1",
+    "asq-base": "ASQ-USI-Elements/asq-base#master",
+    "asq-matchable-behavior": "ASQ-USI-Elements/asq-matchable-behavior#master",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.2",
     "paper-styles": "PolymerElements/paper-styles#~1.0.11",
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.3",
