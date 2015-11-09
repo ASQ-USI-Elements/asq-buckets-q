@@ -15,11 +15,10 @@ Examples:
     
     <asq-buckets-q role="viewer"
       mode="1-3" 
-      x-matchable="div[bucket]" 
-      y-matchable="div[label]" 
+      x-matchable="div[buckets]" 
+      y-matchable="div[labels]" 
       attr-for-matched="s-name"
       matched-attribute="matched"
-      label-container="[labels]"
       matched-class="label-success">
 
       <div buckets>
@@ -62,10 +61,11 @@ Examples:
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
+        x-bucket="{{xBucket}}"
+        y-label="{{yLabel}}"
         attr-for-matched="{{attrForMatched}}"
         matched-attribute="{{matchedAttribute}}"
         matched-class="{{matchedClass}}"
-        label-container="{{labelContainer}}"
         on-dragging-class="{{onDraggingClass}}"
         event-bus="[[eventBus]]">
         <content></content>
@@ -80,10 +80,11 @@ Examples:
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
+        x-bucket="{{xBucket}}"
+        y-label="{{yLabel}}"
         attr-for-matched="{{attrForMatched}}"
         matched-attribute="{{matchedAttribute}}"
         matched-class="{{matchedClass}}"
-        label-container="{{labelContainer}}"
         on-dragging-class="{{onDraggingClass}}"
         event-bus="[[eventBus]]">
         <content></content>
@@ -123,11 +124,6 @@ Examples:
           notify: true
         },
 
-        labelContainer: {
-          type: String,
-          value: '[labels]'
-        },
-
         /**
          * 
          * The attribute value of an element for `matched`.
@@ -148,7 +144,7 @@ Examples:
          */
         xMatchable: {
           type: String,
-          value: '[bucket]'
+          value: '[buckets]'
         },
 
         /**
@@ -159,7 +155,17 @@ Examples:
          */
         yMatchable: {
           type: String,
-          value: '[label]'
+          value: '[labels]'
+        },
+
+        xBucket: {
+          type: String,
+          value: '.bucket'
+        },
+
+        yLabel: {
+          type: String,
+          value: '.label'
         },
         /**
          * 
@@ -212,16 +218,23 @@ Examples:
          *      }'
          *      
          */
-        value: {
-          type: String,
-          value: '{}'
-        }
+        // value: {
+        //   type: String,
+        //   value: '{}'
+        // }
       },
 
-      /**
-       * A proxy that can interface with inner element.
-       */
-      api: undefined,
+      get _api() {
+        return this.$$('asq-buckets-q-' + this.role);
+      },
+
+      get value() {
+        return this._api.value;
+      },
+
+      set value(value) {
+        this._api.value = value;
+      },
 
       created: function () {
         document.addEventListener('asq-ready', function (evt) {
@@ -229,21 +242,6 @@ Examples:
         }.bind(this));
 
         this.listen(this, 'role-changed', '_onRoleChanged');
-      },
-
-      attached: function() {
-        this.async(function() {
-          this._setApi();
-        })
-      },
-
-      _onRoleChanged: function() {
-        this._setApi();
-      },
-
-      _setApi: function() {
-        var selector = 'asq-buckets-q-' + this.role;
-        this.api = this.$$(selector);
       },
 
       /**

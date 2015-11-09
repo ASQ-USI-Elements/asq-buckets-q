@@ -20,19 +20,19 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
-    .container {
+    asq-buckets-q  .container {
       @apply(--layout-vertical);
       @apply(--layout-around-justified);
       @apply(--layout-wrap);
     }
 
-    div[buckets] {
+    asq-buckets-q  div[buckets] {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
       @apply(--layout-wrap);
     }
 
-    div[bucket] {
+    asq-buckets-q  div.bucket {
       @apply(--layout-vertical);
       min-width: 200px;
       min-height: 200px;
@@ -44,12 +44,12 @@
       border-radius: 5px;
     }
 
-    div[bucket].over {
+    asq-buckets-q  div.bucket.over {
       border: 1px dashed #000;
       @apply(--shadow-elevation-3dp);
     }
 
-    div[bucket] > b {
+    asq-buckets-q  div.bucket  b {
       background-color: #75B7BE;
       color: #E6E6E6;
       border-color: #405356;
@@ -66,14 +66,14 @@
 
 
     /*labels*/
-    div[labels] {
+    asq-buckets-q  div[labels] {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
       @apply(--layout-wrap);
     }
 
 
-    div[label] {
+    asq-buckets-q   div.label {
       padding: 6px 12px;
       margin-bottom: 0;
       font-size: 14px;
@@ -96,61 +96,61 @@
       margin: 1px;
     }
 
-    div[label].dragging {
+    asq-buckets-q   div.label.dragging {
       opacity: 0.6;
     }
 
 
 
-    [label].label-primary {
+    asq-buckets-q   div.label.label-primary {
       color: #fff;
       background-color: #337ab7;
       border-color: #2e6da4;
     }
-    [label].label-primary:focus,
-    [label].label-primary.focus {
+    asq-buckets-q   div.label.label-primary:focus,
+    asq-buckets-q   div.label.label-primary.focus {
       color: #fff;
       background-color: #286090;
       border-color: #122b40;
 
     }
-    [label].label-primary:hover {
+    asq-buckets-q   div.label.label-primary:hover {
       color: #fff;
       background-color: #286090;
       border-color: #204d74;
     }
 
-    [label].label-success {
+    asq-buckets-q   div.label.label-success {
       color: #fff;
       background-color: #5cb85c;
       border-color: #4cae4c; 
     }
 
-    [label].label-success:focus,
-    [label].label-success.focus {
+    asq-buckets-q   div.label.label-success:focus,
+    asq-buckets-q   div.label.label-success.focus {
       color: #fff;
       background-color: #449d44;
       border-color: #255625;
     }
-    [label].label-success:hover {
+    asq-buckets-q   div.label.label-success:hover {
       color: #fff;
       background-color: #449d44;
       border-color: #398439;
     }
 
-    h4 {
+    asq-buckets-q  h4 {
       margin: 10px auto;
     }
 
-    div[label].asq-disabled {
+    asq-buckets-q   div.label.asq-disabled {
       color: white;
       background-color: #4C4C4C;
       border-color: #4C4C4C;
       cursor: auto;
     }
 
-    div[label].asq-disabled:hover,
-    div[label].asq-disabled:focus  {
+    asq-buckets-q   div.label.asq-disabled:hover,
+    asq-buckets-q   div.label.asq-disabled:focus  {
       color: white;
       background-color: #4C4C4C;
       border-color: #4C4C4C;
@@ -167,26 +167,25 @@
     <h4>Drag the labels (name of cites) to match the buckets.</h4>
     <asq-buckets-q role="viewer"
       mode="1-3" 
-      x-matchable="div[bucket]" 
-      y-matchable="div[label]" 
+      x-matchable="div[buckets]" 
+      y-matchable="div[labels]" 
       attr-for-matched="s-name"
       matched-attribute="matched"
-      label-container="[labels]"
       matched-class="label-success">
 
       <div buckets>
-        <div s-name="Europe" bucket><b>Europe</b></div>
-        <div s-name="North America" bucket><b>North America</b></div>
-        <div s-name="Middle East" bucket><b>Middle East</b></div>
+        <div s-name="Europe" class="bucket"><b>Europe</b></div>
+        <div s-name="North America" class="bucket"><b>North America</b></div>
+        <div s-name="Middle East" class="bucket"><b>Middle East</b></div>
       </div>
       
       <div labels>
-        <div s-name="New York" label class="label-primary">New York</div>
-        <div s-name="London" label class="label-primary">London</div>
-        <div s-name="Zurich" label class="label-primary">Zurich</div>
-        <div s-name="Jerusalem" label class="label-primary">Jerusalem</div>
-        <div s-name="Chicago" label class="label-primary">Chicago</div>
-        <div s-name="Lugano" label class="label-primary">Lugano</div>
+        <div s-name="New York"  class="label label-primary">New York</div>
+        <div s-name="London"  class="label label-primary">London</div>
+        <div s-name="Zurich"  class="label label-primary">Zurich</div>
+        <div s-name="Jerusalem"  class="label label-primary">Jerusalem</div>
+        <div s-name="Chicago"  class="label label-primary">Chicago</div>
+        <div s-name="Lugano"  class="label label-primary">Lugano</div>
       </div>
     </asq-buckets-q>
   </div>
@@ -196,26 +195,25 @@
     <h4>Drag the labels (name of cites) to match the buckets.</h4>
     <asq-buckets-q role="presenter"
       mode="1-3" 
-      x-matchable="div[bucket]" 
-      y-matchable="div[label]" 
+      x-matchable="div[buckets]" 
+      y-matchable="div[labels]" 
       attr-for-matched="s-name"
       matched-attribute="matched"
-      label-container="[labels]"
       matched-class="label-success">
 
       <div buckets>
-        <div s-name="Europe" bucket><b>Europe</b></div>
-        <div s-name="North America" bucket><b>North America</b></div>
-        <div s-name="Middle East" bucket><b>Middle East</b></div>
+        <div s-name="Europe" class="bucket"><b>Europe</b></div>
+        <div s-name="North America" class="bucket"><b>North America</b></div>
+        <div s-name="Middle East" class="bucket"><b>Middle East</b></div>
       </div>
       
       <div labels>
-        <div s-name="New York" label class="label-primary">New York</div>
-        <div s-name="London" label class="label-primary">London</div>
-        <div s-name="Zurich" label class="label-primary">Zurich</div>
-        <div s-name="Jerusalem" label class="label-primary">Jerusalem</div>
-        <div s-name="Chicago" label class="label-primary">Chicago</div>
-        <div s-name="Lugano" label class="label-primary">Lugano</div>
+        <div s-name="New York"  class="label label-primary">New York</div>
+        <div s-name="London"  class="label label-primary">London</div>
+        <div s-name="Zurich"  class="label label-primary">Zurich</div>
+        <div s-name="Jerusalem"  class="label label-primary">Jerusalem</div>
+        <div s-name="Chicago"  class="label label-primary">Chicago</div>
+        <div s-name="Lugano"  class="label label-primary">Lugano</div>
       </div>
     </asq-buckets-q>
   </div>
