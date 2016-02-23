@@ -2,14 +2,15 @@
 <link rel="import" href="../../asq-base/asq-base.html">
 <link rel="import" href="../../asq-matchable-behavior/asq-matchable-behavior.html">
 
-<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../paper-item/paper-item.html">
-<link rel="import" href="../../paper-tabs/paper-tab.html">
-<link rel="import" href="../../paper-tabs/paper-tabs.html">
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../../iron-list/iron-list.html">
 <link rel="import" href="../../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-tabs/paper-tab.html">
+<link rel="import" href="../../paper-tabs/paper-tabs.html">
+<link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
 
 
 
@@ -57,12 +58,18 @@
     #submissionList paper-item[focused]{
       background-color: var(--google-grey-300);
     }
+
+    #statsToggle{
+      position:relative;
+      @apply(--asq-buckets-stats-toggle);
+    }
   </style>
 
   <template>
     <section id="container">
       <div id="main-container">
         <content></content>
+        <paper-toggle-button id="statsToggle" on-iron-change="_onStatsToggleChange"></paper-toggle-button>
       </div>
       
       <div id="list-container">
@@ -107,7 +114,7 @@
         if ( Array.isArray(container) && container.length >=1 ) {
           return container[0]
         }
-        return this
+        return this;
       },
 
       properties: {
@@ -187,6 +194,15 @@
         }, this);
       },
 
+       _onStatsToggleChange: function(evt, detail){
+        this._showingStats = this.$.statsToggle.checked;
+        if(this._showingStats){
+          this._renderStats(this._stats);
+        }else{
+          this._clearStats();
+        }
+      },
+
       /**
        * Overriten from asq-matchable-behavior.
        * Returns an array of items in `X` set.
@@ -242,11 +258,18 @@
       _selectedSubmissionItemChanged: function(newItem, old){
         if(! newItem) return;
         this._lastSelectionIndex = this.$.submissionList.items.indexOf(newItem);
+        this._clearStats();
         this.value = JSON.stringify(newItem.submission);
       },
 
       _submissionsChanged: function(submissions) {
         if ( ! submissions ) return;
+
+        this._stats = this._calcStats(submissions)
+
+        if(this._showingStats){
+          this._renderStats(this._stats);
+        }
 
         if ( this._lastSelectionIndex == null || typeof this._lastSelectionIndex === 'undefined' ) return;
 
@@ -256,6 +279,48 @@
         this.$.submissionList.selectItem(item);
       },
 
+      _calcStats: function(){
+        var stats = {}
+        this._submissions.forEach(function(s){
+          var sub = (s.submission);
+          Object.keys(sub).forEach(function(b){
+            sub[b].forEach(function(l){
+              stats[l] = stats[l] || {};
+              stats[l][b] = stats[l][b] || 0;
+              ++stats[l][b];
+            });
+          });
+        });
+
+        return stats;
+      },
+
+      _clearStats: function(){
+        this.xItems.forEach(function(bEl) {
+          var statLabels = Polymer.dom(bEl).querySelectorAll('.label-stat');
+          statLabels.forEach(function(l){
+            l.parentNode.removeChild(l);
+          })
+        })
+      },
+
+      _renderStats: function(stats){
+        this._match.clear();
+        this._clearStats();
+        this.yItems.forEach(function(lEl) {
+          this.xItems.forEach(function(bEl) {
+            var l = this._valueForItem(lEl);
+            var b = this._valueForItem(bEl);
+            if(stats[l][b] > 0){
+              var newNode = lEl.cloneNode(true);
+              newNode.classList.add('label-stat')
+              var statBadge = ' <span class="label-stat-badge">' + stats[l][b] +'</span>';
+              newNode.innerHTML += statBadge;
+              bEl.appendChild(newNode)
+            }
+          }.bind(this));
+        }.bind(this));
+      },
 
       _initItems: function() {
 
@@ -344,7 +409,7 @@
 
         this.match(x, y);
 
-        return false
+        return false;
       },
 
       _onDropOut: function(e) {

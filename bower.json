@@ -21,7 +21,8 @@
     "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.5",
     "iron-list": "polymerelements/iron-list#^1.1.5",
     "paper-item": "PolymerElements/paper-item#^1.0.7",
-    "paper-tabs": "polymerelements/paper-tabs#^1.0.10"
+    "paper-tabs": "polymerelements/paper-tabs#^1.0.10",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.1.1"
   },
   "ignore": [
     "index.js",
