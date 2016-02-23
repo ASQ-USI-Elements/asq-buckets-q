@@ -311,7 +311,7 @@
           this.xItems.forEach(function(bEl) {
             var l = this._valueForItem(lEl);
             var b = this._valueForItem(bEl);
-            if(stats[l][b] > 0){
+            if(stats[l] && stats[l][b] > 0){
               var newNode = lEl.cloneNode(true);
               newNode.classList.add('label-stat')
               var statBadge = ' <span class="label-stat-badge">' + stats[l][b] +'</span>';
