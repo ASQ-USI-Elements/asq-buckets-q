@@ -197,8 +197,10 @@
        _onStatsToggleChange: function(evt, detail){
         this._showingStats = this.$.statsToggle.checked;
         if(this._showingStats){
+          this.classList.add('asq-buckets-q-showing-stats')
           this._renderStats(this._stats);
         }else{
+          this.classList.remove('asq-buckets-q-showing-stats')
           this._clearStats();
         }
       },
@@ -283,6 +285,8 @@
         var stats = {}
         this._submissions.forEach(function(s){
           var sub = (s.submission);
+          if(sub == null || typeof sub == "undefined") return;
+          
           Object.keys(sub).forEach(function(b){
             sub[b].forEach(function(l){
               stats[l] = stats[l] || {};
