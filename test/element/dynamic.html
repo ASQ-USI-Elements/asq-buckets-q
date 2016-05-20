@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="asq" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>asq-buckets-q</title>
+
+  <script src="../../../webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../../asq-buckets-q.html">
+</head>
+<body>
+
+  <!-- You use the document as a place to set up your fixtures. -->
+  <test-fixture id="asq-buckets-q">
+    <template>
+      <asq-buckets-q role="viewer"
+          mode="1-3" 
+          x-matchable="div[buckets]" 
+          y-matchable="div[labels]" 
+          attr-for-matched="s-name"
+          matched-attribute="matched"
+          matched-class="label-success">
+
+          <div buckets>
+            <div s-name="Europe" class="bucket"><b>Europe</b></div>
+            <div s-name="North America" class="bucket"><b>North America</b></div>
+            <div s-name="Middle East" class="bucket"><b>Middle East</b></div>
+          </div>
+          
+          <div labels>
+            <div s-name="New York"  class="label label-primary">New York</div>
+            <div s-name="London"  class="label label-primary">London</div>
+            <div s-name="Zurich"  class="label label-primary">Zurich</div>
+            <div s-name="Jerusalem"  class="label label-primary">Jerusalem</div>
+            <div s-name="Chicago"  class="label label-primary">Chicago</div>
+            <div s-name="Lugano"  class="label label-primary">Lugano</div>
+          </div>
+        </asq-buckets-q>
+      
+    </template>
+  </test-fixture>
+  <div id="dl" s-name="Bern"  class="label label-primary">Bern</div>
+  <script>
+  suite('<asq-buckets-q>', function() {
+    var m;
+
+    setup(function() {
+      m = fixture('asq-buckets-q');
+    });
+
+    test('accepts new labels from dom', function(done) {
+      var s = '{"Europe":["New York"],"North America":["London"],"Middle East":["Lugano"]}';
+      var dl = document.querySelector('#dl');
+
+      flush(function() {
+        m._api.value = s;
+        assert.equal(m._api.value, s);
+
+        var labelContainer = m.querySelector('div[labels]')
+        
+        labelContainer.appendChild(dl);
+        m._api._updateItems();
+        
+        flush(function() {
+          m._api.match('Europe', 'Bern');
+          assert.isTrue(m._api.isMatched('Europe', 'Bern'));
+          assert.equal(m._api.value, '{"Europe":["New York","Bern"],"North America":["London"],"Middle East":["Lugano"]}');
+          done();
+        }, 100);
+      }, 100);
+    });
+
+    test('accepts dynamically created labels', function(done) {
+      var s = '{"Europe":["New York"],"North America":["London"],"Middle East":["Lugano"]}';
+      var dl = document.createElement('div');
+      dl.setAttribute('s-name', 'Genf');
+      dl.classList.add('label', 'label-primary');
+      dl.textContent = 'Genf';
+
+      flush(function() {
+        m._api.value = s;
+        assert.equal(m._api.value, s);
+
+        var labelContainer = m.querySelector('div[labels]')
+        
+        labelContainer.appendChild(dl);
+        m._api._updateItems();
+        
+        flush(function() {
+          m._api.match('Europe', 'Genf');
+          assert.isTrue(m._api.isMatched('Europe', 'Genf'));
+          assert.equal(m._api.value, '{"Europe":["New York","Genf"],"North America":["London"],"Middle East":["Lugano"]}');
+          done();
+        }, 100);
+      }, 100);
+    });
+  });
+  </script>
+
+</body>
+</html>
