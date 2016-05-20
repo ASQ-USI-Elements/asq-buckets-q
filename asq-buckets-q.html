@@ -236,6 +236,10 @@ Examples:
         this._api.value = value;
       },
 
+      _updateItems: function() {
+        this._api._updateItems();
+      },
+
       created: function () {
         document.addEventListener('asq-ready', function (evt) {
           this.eventBus = evt.detail.asqEventBus
