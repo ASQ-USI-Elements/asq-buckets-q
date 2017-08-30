@@ -58,6 +58,7 @@ Examples:
         role="viewer" 
         uid="[[uid]]"
         disabled="{{disabled}}"
+        value="{{value}}"
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
@@ -77,6 +78,7 @@ Examples:
         role="presenter" 
         uid="[[uid]]"
         disabled="{{disabled}}"
+        value="{{value}}"
         mode="{{mode}}" 
         x-matchable="{{xMatchable}}" 
         y-matchable="{{yMatchable}}" 
@@ -103,6 +105,15 @@ Examples:
 
 
       properties: {
+
+        /**
+         * The buckets with the matched labels.
+         */
+        value: {
+          type: String,
+          notify: true,
+          observer: "_valueChanged",
+        },
 
         disabled: { 
           type: Boolean,
@@ -228,12 +239,8 @@ Examples:
         return this.$$('asq-buckets-q-' + this.role);
       },
 
-      get value() {
-        return this._api.value;
-      },
-
-      set value(value) {
-        this._api.value = value;
+      _valueChanged: function(newVal) {
+        this.fire('questioninput', newVal)
       },
 
       _updateItems: function() {

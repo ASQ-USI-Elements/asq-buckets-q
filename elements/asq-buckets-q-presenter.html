@@ -144,6 +144,25 @@
           observer: '_submissionsChanged'
         },
 
+        /**
+         * This property is used to specify the matches through a valid 
+         * JSON format string, which is exactlly the stringify string of
+         * `matches`, i.e. JSON.stringify(matches). An example is 
+         * like follows.
+         *
+         *      x.value='{
+         *        "Europe":["New York"],
+         *        "North America":["Jerusalem"],
+         *        "Middle East":["Lugano"]
+         *      }'
+         *      
+         */
+        value: {
+          type: String,
+          value: '{}',
+          notify: true,
+        },
+
         disabled: { 
           type: Boolean,
           value: false,
