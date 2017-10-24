@@ -16,56 +16,54 @@
 
 
 <dom-module id="asq-buckets-q-presenter">
-  
-  <style is="custom-style">
-    :host {
-      display: block;
-      --paper-tabs-selection-bar-color: #333;
-    }
-
-    #container {
-      @apply(--layout-horizontal);
-    }
-
-    #main-container {
-      @apply(--layout-flex-3);
-      @apply(--asq-buckets-q-main-container);
-    }
-
-    #list-container{
-      @apply(--layout-flex);
-      @apply(--layout-vertical);
-    }
-
-    #submissionListWrapper{
-      @apply(--layout-flex);
-      display: none;
-    }
-
-    #submissionList {
-      @apply(--layout-flex);
-    }
-
-    #submissionList paper-item{
-      overflow:hidden;
-      padding: 12px 5px 0;
-      background-color: white;
-      cursor: pointer;
-      font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-      @apply(--shadow-elevation-2dp);
-      outline:none;
-    }
-    #submissionList paper-item[focused]{
-      background-color: var(--google-grey-300);
-    }
-
-    #statsToggle{
-      position:relative;
-      @apply(--asq-buckets-stats-toggle);
-    }
-  </style>
-
   <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+        --paper-tabs-selection-bar-color: #333;
+      }
+
+      #container {
+        @apply(--layout-horizontal);
+      }
+
+      #main-container {
+        @apply(--layout-flex-3);
+        @apply(--asq-buckets-q-main-container);
+      }
+
+      #list-container{
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+
+      #submissionListWrapper{
+        @apply(--layout-flex);
+        display: none;
+      }
+
+      #submissionList {
+        @apply(--layout-flex);
+      }
+
+      #submissionList paper-item{
+        overflow:hidden;
+        padding: 12px 5px 0;
+        background-color: white;
+        cursor: pointer;
+        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+        @apply(--shadow-elevation-2dp);
+        outline:none;
+      }
+      #submissionList paper-item[focused]{
+        background-color: var(--google-grey-300);
+      }
+
+      #statsToggle{
+        position:relative;
+        @apply(--asq-buckets-stats-toggle);
+      }
+    </style>
     <section id="container">
       <div id="main-container">
         <content></content>
