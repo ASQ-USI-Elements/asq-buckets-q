@@ -524,15 +524,43 @@
         if (!evt || !evt.questionType)
           return;
         if (evt.questionType == 'asq-buckets-q') {
-          if (evt.type == 'progress') {
-            this._onProgress(evt);
-          } else if (evt.type == 'restorePresenter') {
-            // use async
-            this.async(function() {
-              this._onRestorePresenter(evt);
-            })
+          switch (evt.type){
+            case 'progress':
+              return this._onProgress(evt);
+              break;
+            case 'restorePresenter':
+              return this.async(function() {
+                this._onRestorePresenter(evt);
+              })
+              break;
+            case 'setValue':
+              return this._onSetValue(evt);
+              break;
+            case 'clearValue':
+              return this._onClearValue(evt);
+              break;
+            default:
+              break;
           }
         }
+      },
+
+      _onSetValue: function (evt) {
+        if (!evt.question || evt.question.uid !== this.uid)
+          return;
+
+        try{
+          this.value = JSON.stringify(evt.answer.submission);
+        }catch(err){
+          console.log('could not set value' + evt.answer.submission)
+        }
+      },
+
+      _onClearValue: function (evt) {
+        if (!evt.question || evt.question.uid !== this.uid)
+          return;
+
+        this.value = '{}';
       },
 
       _onRestorePresenter: function (evt) {

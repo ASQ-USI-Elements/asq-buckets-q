@@ -1,19 +1,59 @@
 <link rel="import" href="../../polymer/polymer.html">
 <link rel="import" href="../../asq-base/asq-base.html">
 <link rel="import" href="../../asq-matchable-behavior/asq-matchable-behavior.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
 
 
 <dom-module id="asq-buckets-q-viewer">
-  
-  <style is="custom-style">
-    :host {
-      display: block;
-    }
-
-  </style>
-
   <template>
-    <content></content>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+
+
+      #container{
+        @apply(--layout-horizontal);
+      }
+
+      #correctnessContainer{
+        width: 40px;
+        padding: 0 10px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      #correctnessContainer.correct{
+        color: var(--paper-green-500);
+      }
+
+      #correctnessContainer.incorrect{
+        color: var(--paper-red-500);
+      }
+
+      #correctnessContainer iron-icon{
+        --iron-icon:{
+          width: 36px;
+          height: 36px;
+        };
+      }
+
+      #mainContent{
+        @apply(--layout-flex);
+      }
+
+    </style>
+
+    <div id="container">
+      <div id='mainContent'>
+        <content></content>
+      </div>
+      <div id="correctnessContainer" class$="[[_computeCorrectnessClass(_isCorrect)]]">
+        <iron-icon icon="[[_computeCorrectnessIcon(_isCorrect)]]"></iron-icon>
+      </div>
+    </div>
   </template>
 
   <script>
@@ -174,6 +214,10 @@
           type: String,
           value: 'asq-disabled'
         },
+
+        _isCorrect:{
+          type: Boolean
+        }
       },
 
       _yMatchableChanged: function() {
@@ -392,17 +436,49 @@
         }
       },
 
+      _computeCorrectnessClass: function(isCorrect){
+        if(isCorrect === true){
+          return 'correct';
+        }else if(isCorrect === false){
+          return 'incorrect';
+        }
+        return '';
+      },
+
+      _computeCorrectnessIcon: function(isCorrect){
+        if(isCorrect === true){
+          return 'icons:check-circle';
+        }else if(isCorrect === false){
+          return 'icons:cancel';
+        }
+        return '';
+      },
+
       _onQuestionType: function (evt) {
         if (!evt || !evt.questionType)
           return;
         if (evt.questionType == 'asq-buckets-q') {
-          if (evt.type == 'restoreViewer') {
-            // use async
-            this.async(function() {
-              this._onRestoreViewer(evt);
-            })
+          switch (evt.type){
+            case 'restoreViewer':
+              return this.async(function() {
+                this._onRestoreViewer(evt);
+              })
+              break;
+            case 'setCorrectness':
+              return this._onSetCorrectness(evt);
+              break;
+            default:
+              break;
           }
         }
+      },
+
+
+      _onSetCorrectness: function (evt) {
+        if (!evt.question || evt.question.uid !== this.uid)
+          return;
+
+        this._isCorrect = evt.answer.isCorrect;
       },
 
 
